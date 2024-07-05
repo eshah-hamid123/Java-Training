@@ -1,0 +1,123 @@
+openapi: 3.0.1
+info:
+  title: Blog API
+  description: Blog API Specification
+  version: 0.0.1
+servers:
+  - url: /
+paths:
+  /api/v1/Blog/{BlogId}:
+    get:
+      tags:
+        - blog
+      parameters:
+        - name: blogId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blog'
+    put:
+      tags:
+        - blog
+      parameters:
+        - name: blogId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Blog'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blog'
+    delete:
+      tags:
+        - blog
+      operationId: delete
+      parameters:
+        - name: blogId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blog'
+  /api/v1/blog:
+    get:
+      tags:
+        - blog
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 1000
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blog'
+    post:
+      tags:
+        - blog
+      operationId: post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Blog'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blog'
+components:
+  schemas:
+    Blog:
+      type: object
+      properties:
+        blogId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        description:
+          type: string
+
