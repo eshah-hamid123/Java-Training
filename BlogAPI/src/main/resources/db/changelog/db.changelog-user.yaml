@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-lecture-be-03
+      author: news team
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(50)
+              - column:
+                  name: password
+                  type: varchar(200)
+              - column:
+                  name: roles
+                  type: varchar(200)
+              - column:
+                  name: created_at
+                  type: DATETIME
+        - addPrimaryKey:
+            tableName: users
+            columnNames: user_id
+            constraintName: users_pk
+  - changeSet:
+      id: data-lecture-be-02
+      author: news team
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: user_id
+                  value: '123'
+              - column:
+                  name: username
+                  value: admin
+              - column:
+                  name: password
+                  value: '{bcrypt}$2a$12$X6a5coQHUAAy2kysG3nhhe3OWH7FWae7RNtA9AduPo1jlAvaEsrY2'
+              - column:
+                  name: roles
+                  value: admin
+              - column:
+                  name: created_at
+                  value: '2000-01-01T12:00:00'

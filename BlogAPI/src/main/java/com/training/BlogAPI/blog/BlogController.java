@@ -10,15 +10,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/blog")
 public class BlogController {
-    private final BlogRepository blogRepository;
-    public BlogController(BlogRepository blogRepository) {
-        this.blogRepository = blogRepository;
+    private final BlogService blogService;
+    public BlogController(BlogService blogService) {
+        this.blogService = blogService;
     }
 
     @PostMapping("/post-blog")
     public ResponseEntity<?> createBlog(@RequestBody Blog blog) {
         try {
-            Blog savedBlog = blogRepository.save(blog);
+            Blog savedBlog = blogService.createBlog(blog);
             return new ResponseEntity<>(savedBlog, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -27,7 +27,7 @@ public class BlogController {
 
     @GetMapping("/{blogId}")
     public ResponseEntity<Blog> getBlogById(@PathVariable("blogId") Long blogId) {
-        Optional<Blog> blog = blogRepository.findById(blogId);
+        Optional<Blog> blog = blogService.getBlogById(blogId);
         if (blog.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -35,25 +35,16 @@ public class BlogController {
     }
 
     @GetMapping("/all-blogs")
-    public ResponseEntity<List<Blog>> get(@RequestParam(name = "page", defaultValue = "0") Integer page,
-                                          @RequestParam(name = "page", defaultValue = "1000") Integer size) {
-        return ResponseEntity.ok(blogRepository.findAll());
+    public ResponseEntity<List<Blog>> getAllBlogs(@RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                  @RequestParam(name = "size", defaultValue = "1000") Integer size) {
+        List<Blog> blogs = blogService.getAllBlogs();
+        return ResponseEntity.ok(blogs);
     }
 
     @PutMapping("/update-blog/{blogId}")
     public ResponseEntity<?> updateBlog(@PathVariable("blogId") Long blogId, @RequestBody Blog blogDetails) {
-        Optional<Blog> blogToUpdateOptional = blogRepository.findById(blogId);
-        if (blogToUpdateOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Blog blogToUpdate = blogToUpdateOptional.get();
-
-        blogToUpdate.setTitle(blogDetails.getTitle());
-        blogToUpdate.setDescription(blogDetails.getDescription());
-
         try {
-            Blog updatedBlog = blogRepository.save(blogToUpdate);
+            Blog updatedBlog = blogService.updateBlog(blogId, blogDetails);
             return ResponseEntity.ok(updatedBlog);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -62,12 +53,11 @@ public class BlogController {
 
     @DeleteMapping("/delete-blog/{blogId}")
     public ResponseEntity<?> deleteBlog(@PathVariable("blogId") Long blogId) {
-        Optional<Blog> blogToDeleteOptional = blogRepository.findById(blogId);
-        if (blogToDeleteOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        try {
+            blogService.deleteBlog(blogId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        blogRepository.deleteById(blogId);
-        return ResponseEntity.ok(blogToDeleteOptional.get());
     }
 }

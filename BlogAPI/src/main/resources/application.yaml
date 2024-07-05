@@ -10,3 +10,12 @@ spring:
     hibernate:
       ddl-auto: none
     open-in-view: false
+
+#  security:
+#    user:
+#      name: test
+#      password: test
+
+api:
+  security:
+    ignored: /api/v1/blog/all-blogs
