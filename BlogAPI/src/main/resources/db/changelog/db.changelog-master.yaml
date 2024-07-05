@@ -4,7 +4,7 @@ databaseChangeLog:
     author: blog team
     changes:
       - createTable:
-          tableName: blog
+          tableName: blogs
           columns:
             - column:
                 name: blog_id
