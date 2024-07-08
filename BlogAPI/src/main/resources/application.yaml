@@ -11,11 +11,12 @@ spring:
       ddl-auto: none
     open-in-view: false
 
-#  security:
-#    user:
-#      name: test
-#      password: test
+  security:
+    user:
+      name: test
+      password: test
+      roles: AUTHOR, EDITOR, ADMIN
 
 api:
   security:
-    ignored: /api/v1/blog/all-blogs
+    ignored: /api/v1/blog/all-blogs,/swagger-ui/**,/v3/api-docs,/v3/api-docs/**

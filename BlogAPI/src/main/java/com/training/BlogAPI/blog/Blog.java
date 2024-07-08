@@ -13,4 +13,5 @@ public class Blog {
     private long blogId;
     private String title;
     private String description;
+    private String authorName;
 }

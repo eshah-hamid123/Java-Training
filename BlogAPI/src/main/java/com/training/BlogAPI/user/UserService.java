@@ -20,7 +20,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
-            throw new UsernameNotFoundException("User or passowrd incorrect.");
+            throw new UsernameNotFoundException("User or password incorrect.");
         }
         return new org.springframework.security.core.userdetails.User(user.get().getUsername(),
                 user.get().getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList(user.get().getRoles()));

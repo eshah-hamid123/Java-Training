@@ -19,3 +19,6 @@ databaseChangeLog:
               - column:
                   name: description
                   type: varchar(1000)
+              - column:
+                  name: author_name
+                  type: varchar(1000)
