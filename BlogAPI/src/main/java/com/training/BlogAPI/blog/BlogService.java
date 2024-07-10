@@ -45,6 +45,7 @@ public class BlogService {
         Blog blogToUpdate = blogToUpdateOptional.get();
         blogToUpdate.setTitle(blogDetails.getTitle());
         blogToUpdate.setDescription(blogDetails.getDescription());
+        blogToUpdate.setAuthorName(blogDetails.getAuthorName());
 
         return blogRepository.save(blogToUpdate);
     }
