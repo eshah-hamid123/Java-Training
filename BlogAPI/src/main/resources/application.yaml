@@ -20,3 +20,19 @@ spring:
 api:
   security:
     ignored: /api/v1/blog/all-blogs,/swagger-ui/**,/v3/api-docs,/v3/api-docs/**
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+#logging:
+#  file:
+#    name: target/blog.log
+
+  level:
+    '[org.springframework.security]': trace

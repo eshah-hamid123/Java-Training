@@ -1,0 +1,21 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:bank
+    username: test
+    password: eisha
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+#  security:
+#    user:
+#      name: test
+#      password: test
+#      role:  ADMIN, APPUSER
+
+api:
+  security:
+    ignored: /swagger-ui/**,/v3/api-docs,/v3/api-docs/**,/h2-console/**
