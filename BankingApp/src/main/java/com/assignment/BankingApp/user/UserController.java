@@ -1,5 +1,6 @@
 package com.assignment.BankingApp.user;
 
+import com.assignment.BankingApp.login.Login;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,5 +61,16 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(userAccountDTO);
+    }
+
+    @PostMapping("/login-user")
+    public ResponseEntity<String> login(@RequestBody Login login) {
+        Optional<User> userOptional = userService.login(login);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return ResponseEntity.ok("{\"message\":\"Login successful\", \"role\":\"" + user.getRole() + "\"}");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        }
     }
 }

@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 
 import com.assignment.BankingApp.account.Account;
 import com.assignment.BankingApp.account.AccountRepository;
+import com.assignment.BankingApp.login.Login;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -123,6 +124,17 @@ public class UserService implements UserDetailsService {
                     account
             );
         }).collect(Collectors.toList());
+    }
+
+    public Optional<User> login(Login login) {
+        Optional<User> userOptional = userRepository.findByUsername(login.getUsername());
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (user.getPassword().equals(login.getPassword())) {
+                return Optional.of(user);
+            }
+        }
+        return Optional.empty();
     }
 
 
