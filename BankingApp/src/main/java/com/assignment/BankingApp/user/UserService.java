@@ -128,17 +128,25 @@ public class UserService implements UserDetailsService {
 
     private static String generateAccountNumber() {
         long timestamp = System.currentTimeMillis();
-        String hash = hashTimestamp(timestamp);
-        return hash.substring(0, 8).toUpperCase();  // Take the first 8 characters and convert to uppercase
+        String hash = hashTimestampToNumeric(timestamp);
+        return hash.substring(0, 8);
     }
 
-    private static String hashTimestamp(long timestamp) {
+    private static String hashTimestampToNumeric(long timestamp) {
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedHash = digest.digest(Long.toString(timestamp).getBytes());
-            return Base64.getUrlEncoder().withoutPadding().encodeToString(encodedHash);
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = md.digest(String.valueOf(timestamp).getBytes());
+            StringBuilder numericHash = new StringBuilder();
+
+            // Convert each byte to a numeric character (0-9)
+            for (byte b : hashBytes) {
+                int numericValue = (b & 0xFF) % 10;  // Convert to a number between 0 and 9
+                numericHash.append(numericValue);
+            }
+
+            return numericHash.toString();
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error generating account number", e);
+            throw new RuntimeException("SHA-256 algorithm not found", e);
         }
     }
 

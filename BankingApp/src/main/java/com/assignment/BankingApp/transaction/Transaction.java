@@ -21,5 +21,5 @@ public class Transaction {
     private Long amount;
     //private String dbCrIndicator;
     private Long senderAccountId;
-    private String receiverAccountId;
+    private Long receiverAccountId;
 }
