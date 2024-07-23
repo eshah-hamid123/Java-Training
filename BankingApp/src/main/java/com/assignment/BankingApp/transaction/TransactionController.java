@@ -1,6 +1,5 @@
 package com.assignment.BankingApp.transaction;
 
-import com.assignment.BankingApp.user.UserAccountDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ public class TransactionController {
         }
     }
 
-    @PreAuthorize("hasAnyAuthority('admin')")
+    //@PreAuthorize("hasAnyAuthority('admin')")
     @GetMapping("/all-transactions")
     public ResponseEntity<List<Transaction>> getAllTransactions(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                                             @RequestParam(name = "size", defaultValue = "1000") Integer size) {

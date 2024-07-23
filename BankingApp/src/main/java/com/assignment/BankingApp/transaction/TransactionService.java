@@ -3,8 +3,6 @@ package com.assignment.BankingApp.transaction;
 import com.assignment.BankingApp.account.Account;
 import com.assignment.BankingApp.account.AccountRepository;
 import com.assignment.BankingApp.config.ApiSecurityConfiguration;
-import com.assignment.BankingApp.user.User;
-import com.assignment.BankingApp.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,22 +20,21 @@ import java.util.Optional;
 public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
-    private final UserRepository userRepository; // Inject UserRepository
+
 
     private static final Logger logger = LoggerFactory.getLogger(ApiSecurityConfiguration.class);
     @Autowired
     public TransactionService(TransactionRepository transactionRepository,
-                              AccountRepository accountRepository,
-                              UserRepository userRepository) {
+                              AccountRepository accountRepository
+                              ) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
-        this.userRepository = userRepository;
+
     }
 
     @Transactional
     public Transaction createTransaction(TransactionDTO newTransaction) {
-        User user = getCurrentLoggedInUser();
-        Account senderAccount = getAccountByUserId(user.getId().toString());
+        Account senderAccount = getCurrentLoggedInUser();
         Account receiverAccount = getAccountByNumber(newTransaction.getRecieverAccountNumber());
 
         validateSufficientBalance(senderAccount, newTransaction.getAmount());
@@ -57,33 +54,32 @@ public class TransactionService {
         return transactionRepository.findAll(PageRequest.of(page, size)).getContent();
     }
 
-    public Optional<Transaction> getTransactionById(Long blogId) {
-        return transactionRepository.findById(blogId);
+    public Optional<Transaction> getTransactionById(Long transactionId) {
+        return transactionRepository.findById(transactionId);
     }
 
     public List<Transaction> getDebitTransactions() {
-        User user = getCurrentLoggedInUser();
-        Account senderAccount = getAccountByUserId(user.getId().toString());
-        return transactionRepository.findBySenderAccountId(senderAccount.getId());
+        Account account = getCurrentLoggedInUser();
+
+        return transactionRepository.findBySenderAccountId(account.getId());
     }
 
     public List<Transaction> getCreditTransactions() {
-        User user = getCurrentLoggedInUser();
-        Account receiverAccount = getAccountByUserId(user.getId().toString());
-        return transactionRepository.findByReceiverAccountId(receiverAccount.getId());
+        Account account = getCurrentLoggedInUser();
+        return transactionRepository.findByReceiverAccountId(account.getId());
     }
 
-    private User getCurrentLoggedInUser() {
+    private Account getCurrentLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUsername = authentication.getName();
 
-        return userRepository.findByUsername(loggedInUsername)
+        return accountRepository.findByUsername(loggedInUsername)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    private Account getAccountByUserId(String userId) {
-        return accountRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Account not found for user ID: " + userId));
+    private Account getAccountByUserId(Long accountId) {
+        return accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found for user ID: " + accountId));
     }
 
     private Account getAccountByNumber(String accountNumber) {

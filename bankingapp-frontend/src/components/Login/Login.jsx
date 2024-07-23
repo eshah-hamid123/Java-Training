@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const LoginPage = () => {
+const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -11,18 +11,19 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/login-user', {
+      const response = await axios.post('http://localhost:8080/accounts/login-user', {
         username,
         password,
       });
 
       if (response.status === 200) {
-        const role = response.data.role; 
+        const role = response.data.account.role;
+        const account =  response.data.account;
         
         if (role === 'admin') {
           navigate('/admin-dashboard');
         } else if (role === 'account-holder') {
-          navigate('/account-holder-dashboard');
+          navigate('/account-holder-dashboard', { state: { account } });
         }
       } else {
         setErrorMessage('Login failed');
@@ -38,11 +39,11 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-container">
+    <div>
       <form className="login-form" onSubmit={handleLogin}>
         <h2>Login</h2>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
-        <div className="form-group">
+        {errorMessage && <p>{errorMessage}</p>}
+        <div>
           <label htmlFor="username">Username</label>
           <input
             type="text"
@@ -52,7 +53,7 @@ const LoginPage = () => {
             required
           />
         </div>
-        <div className="form-group">
+        <div>
           <label htmlFor="password">Password</label>
           <input
             type="password"
@@ -68,4 +69,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;

@@ -20,4 +20,4 @@ spring:
 
 api:
   security:
-    ignored: /swagger-ui/**,/v3/api-docs,/v3/api-docs/**,/h2-console/**,/login-user
+    ignored: /swagger-ui/**,/v3/api-docs,/v3/api-docs/**,/h2-console/**,/v1/auth/login

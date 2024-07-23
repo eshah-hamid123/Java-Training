@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
-    private final UserRepository userRepository;
+
     private final AccountRepository accountRepository;
    // private final PasswordEncoder passwordEncoder;
 
@@ -34,143 +34,21 @@ public class UserService implements UserDetailsService {
 //    }
 
     @Autowired
-    public UserService(UserRepository userRepository, AccountRepository accountRepository) {
-        this.userRepository = userRepository;
+    public UserService( AccountRepository accountRepository) {
+
         this.accountRepository = accountRepository;
        // this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user.isEmpty()) {
+        Optional<Account> account = accountRepository.findByUsername(username);
+        if (account.isEmpty()) {
             throw new UsernameNotFoundException("User or password incorrect.");
         }
 
-        return new org.springframework.security.core.userdetails.User(user.get().getUsername(),
-                user.get().getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList(user.get().getRole()));
+        return new org.springframework.security.core.userdetails.User(account.get().getUsername(),
+                account.get().getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList(account.get().getRole()));
     }
-
-    public User createUser(User user) {
-        user.setRole("account-holder");
-
-        //user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User newUser = userRepository.save(user);
-        createAccountForUser(newUser);
-        return newUser;
-    }
-
-    @Transactional
-    public UserAccountDTO getUserById(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isEmpty()) {
-            return null;
-        }
-        User user = userOptional.get();
-        Optional<Account> accountOptional = accountRepository.findByUserId(userId.toString());
-        Account account = accountOptional.orElse(null);
-
-        return new UserAccountDTO(
-                user.getId(),
-                user.getUsername(),
-                user.getRole(),
-                user.getEmail(),
-                user.getAddress(),
-                account
-        );
-    }
-
-    public User updateUser(Long userId, User updatedUser) {
-        Optional<User> existingUser = userRepository.findById(userId);
-        if (existingUser.isPresent()) {
-            User userToUpdate = existingUser.get();
-            userToUpdate.setUsername(updatedUser.getUsername());
-            userToUpdate.setPassword(updatedUser.getPassword());
-            //userToUpdate.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-            userToUpdate.setAddress(updatedUser.getAddress());
-            userToUpdate.setEmail(updatedUser.getEmail());
-            return userRepository.save(userToUpdate);
-        }
-        return null;
-    }
-
-    @Transactional
-    public void deleteUser(Long userId) {
-        accountRepository.deleteByUserId(userId.toString());
-        userRepository.deleteById(userId);
-    }
-
-    private List<User> findAll(Integer page, Integer size) {
-        if (page < 0) {
-            page = 0;
-        }
-        if (size > 1000) {
-            size = 1000;
-        }
-        return userRepository.findAll(PageRequest.of(page, size)).getContent();
-    }
-
-    public List<UserAccountDTO> getAllUserAccountDTOs(Integer page, Integer size) {
-        List<User> users = findAll(page, size);
-        return users.stream().map(user -> {
-            Optional<Account> optionalAccount = accountRepository.findByUserId(user.getId().toString());
-            Account account = optionalAccount.orElse(null);
-            return new UserAccountDTO(
-                    user.getId(),
-                    user.getUsername(),
-                    user.getRole(),
-                    user.getEmail(),
-                    user.getAddress(),
-                    account
-            );
-        }).collect(Collectors.toList());
-    }
-
-    public Optional<User> login(Login login) {
-        Optional<User> userOptional = userRepository.findByUsername(login.getUsername());
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (user.getPassword().equals(login.getPassword())) {
-                return Optional.of(user);
-            }
-        }
-        return Optional.empty();
-    }
-
-
-    private static String generateAccountNumber() {
-        long timestamp = System.currentTimeMillis();
-        String hash = hashTimestampToNumeric(timestamp);
-        return hash.substring(0, 8);
-    }
-
-    private static String hashTimestampToNumeric(long timestamp) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hashBytes = md.digest(String.valueOf(timestamp).getBytes());
-            StringBuilder numericHash = new StringBuilder();
-
-            // Convert each byte to a numeric character (0-9)
-            for (byte b : hashBytes) {
-                int numericValue = (b & 0xFF) % 10;  // Convert to a number between 0 and 9
-                numericHash.append(numericValue);
-            }
-
-            return numericHash.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("SHA-256 algorithm not found", e);
-        }
-    }
-
-    private void createAccountForUser(User user) {
-        Account account = new Account();
-        account.setUserId(user.getId().toString());
-        account.setAccountNumber(generateAccountNumber());
-        account.setBalance(100L);
-        accountRepository.save(account);
-    }
-
-
-
 
 }

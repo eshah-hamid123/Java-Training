@@ -13,20 +13,31 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: username
+                  type: varchar(50)
+              - column:
+                  name: password
+                  type: varchar(200)
+              - column:
+                  name: role
+                  type: varchar(200)
+              - column:
+                  name: email
+                  type: varchar(200)
+              - column:
+                  name: address
+                  type: varchar(200)
+              - column:
                   name: balance
                   type: bigint
                   constraints:
-                    nullable: false
+#                    nullable: false
               - column:
                   name: account_number
                   type: varchar(50)
                   constraints:
-                    nullable: false
-              - column:
-                  name: user_id
-                  type: bigint
-                  constraints:
-                    nullable: false
+#                    nullable: false
+
 
         - addPrimaryKey:
             tableName: accounts
@@ -36,14 +47,34 @@ databaseChangeLog:
             tableName: accounts
             columnNames: account_number
             constraintName: accounts_uk
-
+        - addUniqueConstraint:
+            tableName: accounts
+            columnNames: username
+            constraintName: accounts_uk_username
+        - addUniqueConstraint:
+            tableName: accounts
+            columnNames: email
+            constraintName: accounts_uk_email
   - changeSet:
-      id: add-foreign-key-accounts
+      id: data-admin
       author: bank team
       changes:
-        - addForeignKeyConstraint:
-            baseTableName: accounts
-            baseColumnNames: user_id
-            referencedTableName: users
-            referencedColumnNames: user_id
-            constraintName: fk_accounts_user
+        - insert:
+            tableName: accounts
+            columns:
+              - column:
+                  name: username
+                  value: admin
+              - column:
+                  name: password
+                  value: '$2a$12$A9byoiLydRLWP432qWk6F.HHWi/p.QKHzyyqlxyPP84INdMLnWreS'
+              - column:
+                  name: role
+                  value: admin
+              - column:
+                  name: email
+                  value: admin@gmail.com
+              - column:
+                  name: address
+                  value: Lahore, Pakistan
+

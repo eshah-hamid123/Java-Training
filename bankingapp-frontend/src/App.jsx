@@ -1,16 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './components/Login/Login'; // Adjust the import paths as needed
+import AdminDashboard from './components/AdminDashboard/AdminDashboard';
+import AccountHolderDashboard from './components/AccountHolderDashboard/AccountHolderDashboard';
+import ManageUsers from './components/ManageUsers/ManageUsers';
+import ViewTransactions from './components/ViewTransactions/ViewTransactions';
+import CreateAccount from './components/CreateAccount/CreateAccount';
+import EditAccount from './components/EditAccount/EditAccount';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <h1>Helloooooo</h1>
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/account-holder-dashboard" element={<AccountHolderDashboard />} />
+        <Route path="/manage-users" element={<ManageUsers />} />
+        <Route path="/view-transactions" element={<ViewTransactions />} />
+        <Route path="/create-account" element={<CreateAccount />} />
+        <Route path="/edit-account/:accountId" element={<EditAccount />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
