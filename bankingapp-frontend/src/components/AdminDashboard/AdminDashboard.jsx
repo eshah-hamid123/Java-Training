@@ -1,50 +1,64 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Container, Typography, Paper, Grid, Box } from "@mui/material";
+import Layout from "../Layout/Layout";
 import axios from "axios";
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
-  const navigate = useNavigate();
+  const [totalUsers, setTotalUsers] = useState(0);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    navigate("/");
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const usersResponse = await axios.get("http://localhost:8080/accounts/all-accounts", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setTotalUsers(usersResponse.data.length - 1);
 
-  const handleViewTransactions = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:8080/transactions/all-transactions", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          page: 0,
-          size: 1000,
-        },
-      });
-      navigate("/view-transactions", { state: { transactions: response.data } });
-    } catch (error) {
-      console.error("Error fetching transactions", error);
-    }
-  };
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
 
+    fetchData();
+  }, []);
+  
   return (
-    <div className="admin-dashboard">
-      <h1>Admin Dashboard</h1>
-      <div className="dashboard-options">
-        <Link to="/manage-users" className="dashboard-option">
-          Manage Users
-        </Link>
-        <button onClick={handleViewTransactions} className="dashboard-option">
-          View Transactions
-        </button>
-        <button onClick={handleLogout} className="dashboard-option">
-          Logout
-        </button>
-      </div>
-    </div>
+    <Layout>
+      <Container component="main" maxWidth="md">
+        <Paper elevation={5} className="dashboard-paper">
+          <Typography variant="h4" gutterBottom className="dashboard-title">
+            Welcome, Admin
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            Here’s an overview of the system:
+          </Typography>
+          <Grid container spacing={4}>
+            <Grid item xs={12} sm={6} md={4}>
+              <Box className="dashboard-card">
+                <Typography variant="h6" className="card-title">Total Users</Typography>
+                <Typography variant="h4" className="card-value">{totalUsers}</Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Box className="dashboard-card">
+                <Typography variant="h6" className="card-title">Pending Transactions</Typography>
+                <Typography variant="h4" className="card-value">456</Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Box className="dashboard-card">
+                <Typography variant="h6" className="card-title">System Status</Typography>
+                <Typography variant="h4" className="card-value">Operational</Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Container>
+    </Layout>
   );
 };
 

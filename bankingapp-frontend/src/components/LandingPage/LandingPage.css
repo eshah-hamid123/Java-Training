@@ -1,0 +1,43 @@
+/* src/pages/LandingPage.css */
+.landing-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f5f5f5; /* Light gray */
+}
+
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-paper {
+    padding: 40px; /* Increased padding */
+    text-align: center;
+    background-color: white; /* White background for fallback */
+    background-image: url('/src/assets/images/hero_2.jpg'); /* Set your background image */
+    background-size: contain; /* Fit image within the container */
+    background-repeat: no-repeat; /* Prevent repeating */
+    background-position: center; /* Center the background image */
+    height: 60vh; /* Adjust the height as needed */
+    width: 90%; /* Full width */
+    
+    border-radius: 8px; /* Optional: rounded corners */
+}
+
+.hero-title {
+    margin-bottom: 20px;
+    color: #2e8b57; /* Dark green */
+}
+
+.hero-subtitle {
+    margin-bottom: 20px;
+}
+
+.get-started-button {
+    margin-top: 20px;
+    background-color: #3cb371; /* Medium sea green */
+    color: white;
+}

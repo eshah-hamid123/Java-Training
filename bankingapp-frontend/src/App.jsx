@@ -18,8 +18,9 @@ function App() {
   return (
     <Router>
       <Routes>
-      <Route path="/" element={isAuthenticated ? (userRole === 'admin' ? <Navigate to="/admin-dashboard" /> : <Navigate to="/account-holder-dashboard" />) : <Login />} />
+      <Route path="/" element={isAuthenticated ? (userRole === 'admin' ? <Navigate to="/admin-dashboard" /> : <Navigate to="/account-holder-dashboard" />) : <LandingPage />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/account-holder-dashboard" element={<AccountHolderDashboard />} />
         <Route path="/manage-users" element={<ManageUsers />} />
         <Route path="/view-transactions" element={<ViewTransactions />} />

@@ -2,6 +2,7 @@ package com.assignment.BankingApp.Auth;
 
 import com.assignment.BankingApp.account.Account;
 import com.assignment.BankingApp.account.AccountRepository;
+import com.assignment.BankingApp.error.ErrorResponse;
 import com.assignment.BankingApp.login.Login;
 import com.assignment.BankingApp.security.JwtHelper;
 import com.assignment.BankingApp.security.JwtResponse;
@@ -36,38 +37,36 @@ public class AuthController {
     AccountRepository accountRepository;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody Login login) {
+    public ResponseEntity<?> login(@RequestBody Login login) {
 
-        this.doAuthenticate(login.getUsername(), login.getPassword());
-        UserDetails userDetails = userDetailsService.loadUserByUsername(login.getUsername());
-        String token = this.helper.generateToken(userDetails);
-        Account account = null;
-        Optional<Account> optionalAccount = accountRepository.findByUsername(login.getUsername());
-        if(optionalAccount.isPresent()){
-            account = optionalAccount.get();
+        try {
+            this.doAuthenticate(login.getUsername(), login.getPassword());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(login.getUsername());
+            String token = this.helper.generateToken(userDetails);
+            Account account = null;
+            Optional<Account> optionalAccount = accountRepository.findByUsername(login.getUsername());
+            if (optionalAccount.isPresent()) {
+                account = optionalAccount.get();
+            }
+            JwtResponse response = JwtResponse.builder()
+                    .jwtToken(token)
+                    .account(account)
+                    .build();
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (BadCredentialsException e) {
+            return new ResponseEntity<>(new ErrorResponse("Invalid username or password"), HttpStatus.UNAUTHORIZED);
         }
-        JwtResponse response = JwtResponse.builder()
-                .jwtToken(token)
-                .account(account)
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     private void doAuthenticate(String email, String password) {
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, password);
-        try {
-            manager.authenticate(authentication);
-
-
-        } catch (BadCredentialsException e) {
-            throw new BadCredentialsException(" Invalid Username or Password  !!");
-        }
+        manager.authenticate(authentication);
 
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public String exceptionHandler() {
-        return "Credentials Invalid !!";
+    public ResponseEntity<ErrorResponse> exceptionHandler(BadCredentialsException e) {
+        return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 }
