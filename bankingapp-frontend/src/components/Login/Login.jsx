@@ -11,14 +11,16 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/accounts/login-user', {
+      const response = await axios.post('http://localhost:8080/v1/auth/login', {
         username,
         password,
       });
 
       if (response.status === 200) {
-        const role = response.data.account.role;
-        const account =  response.data.account;
+        const { jwtToken, account } = response.data;
+        const role = account.role
+        localStorage.setItem('token', jwtToken);
+        localStorage.setItem('role', role);
         
         if (role === 'admin') {
           navigate('/admin-dashboard');

@@ -27,7 +27,12 @@ const CreateAccount = () => {
         e.preventDefault();
         setError('');
         try {
-            const response = await axios.post('http://localhost:8080/accounts/create-account', formData);
+            const token = localStorage.getItem('token');
+            const response = await axios.post('http://localhost:8080/accounts/create-account', formData, {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              });
             alert('Account created successfully!');
             setFormData({
                 username: '',

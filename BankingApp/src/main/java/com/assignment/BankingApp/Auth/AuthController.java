@@ -1,6 +1,7 @@
 package com.assignment.BankingApp.Auth;
 
 import com.assignment.BankingApp.account.Account;
+import com.assignment.BankingApp.account.AccountRepository;
 import com.assignment.BankingApp.login.Login;
 import com.assignment.BankingApp.security.JwtHelper;
 import com.assignment.BankingApp.security.JwtResponse;
@@ -31,13 +32,24 @@ public class AuthController {
     @Autowired
     private JwtHelper helper;
 
+    @Autowired
+    AccountRepository accountRepository;
+
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody Login login) {
+
         this.doAuthenticate(login.getUsername(), login.getPassword());
         UserDetails userDetails = userDetailsService.loadUserByUsername(login.getUsername());
         String token = this.helper.generateToken(userDetails);
+        Account account = null;
+        Optional<Account> optionalAccount = accountRepository.findByUsername(login.getUsername());
+        if(optionalAccount.isPresent()){
+            account = optionalAccount.get();
+        }
         JwtResponse response = JwtResponse.builder()
-                .jwtToken(token).build();
+                .jwtToken(token)
+                .account(account)
+                .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

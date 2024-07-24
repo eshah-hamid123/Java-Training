@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -44,29 +45,72 @@ public class TransactionService {
         return saveTransaction(newTransaction, senderAccount, receiverAccount);
     }
 
-    public List<Transaction> findAll(Integer page, Integer size) {
+    public List<TransactionHistoryDTO> findAll(Integer page, Integer size) {
         if (page < 0) {
             page = 0;
         }
         if (size > 1000) {
             size = 1000;
         }
-        return transactionRepository.findAll(PageRequest.of(page, size)).getContent();
+        List<Transaction> transactions =  transactionRepository.findAll(PageRequest.of(page, size)).getContent();
+        return transactions.stream().map(transaction -> {
+            String senderUsername = accountRepository.findById(transaction.getSenderAccountId())
+                    .map(Account::getUsername)
+                    .orElse("Unknown");
+            String receiverUsername = accountRepository.findById(transaction.getReceiverAccountId())
+                    .map(Account::getUsername)
+                    .orElse("Unknown");
+            return new TransactionHistoryDTO(
+                    transaction.getId(),
+                    transaction.getDescription(),
+                    transaction.getAmount(),
+                    transaction.getDate(),
+                    senderUsername,
+                    receiverUsername
+            );
+        }).collect(Collectors.toList());
     }
 
     public Optional<Transaction> getTransactionById(Long transactionId) {
         return transactionRepository.findById(transactionId);
     }
 
-    public List<Transaction> getDebitTransactions() {
+    public List<TransactionHistoryDTO> getDebitTransactions() {
         Account account = getCurrentLoggedInUser();
 
-        return transactionRepository.findBySenderAccountId(account.getId());
+        List<Transaction> transactions =  transactionRepository.findBySenderAccountId(account.getId());
+        return transactions.stream().map(transaction -> {
+            String receiverUsername = accountRepository.findById(transaction.getReceiverAccountId())
+                    .map(Account::getUsername)
+                    .orElse("Unknown");
+            return new TransactionHistoryDTO(
+                    transaction.getId(),
+                    transaction.getDescription(),
+                    transaction.getAmount(),
+                    transaction.getDate(),
+                    null,
+                    receiverUsername
+            );
+        }).collect(Collectors.toList());
     }
 
-    public List<Transaction> getCreditTransactions() {
+    public List<TransactionHistoryDTO> getCreditTransactions() {
         Account account = getCurrentLoggedInUser();
-        return transactionRepository.findByReceiverAccountId(account.getId());
+        List<Transaction> transactions =  transactionRepository.findByReceiverAccountId(account.getId());
+        return transactions.stream().map(transaction -> {
+            String senderUsername = accountRepository.findById(transaction.getSenderAccountId())
+                    .map(Account::getUsername)
+                    .orElse("Unknown");
+            return new TransactionHistoryDTO(
+                    transaction.getId(),
+                    transaction.getDescription(),
+                    transaction.getAmount(),
+                    transaction.getDate(),
+                    senderUsername,
+                    null
+            );
+        }).collect(Collectors.toList());
+
     }
 
     private Account getCurrentLoggedInUser() {

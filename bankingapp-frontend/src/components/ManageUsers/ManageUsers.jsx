@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaEdit, FaTrash } from 'react-icons/fa'; // Import icons from react-icons
+import { FaEdit, FaTrash } from 'react-icons/fa'; 
 import './ManageUsers.css';
 
 const ManageUsers = () => {
@@ -11,7 +11,12 @@ const ManageUsers = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:8080/accounts/all-accounts')
+        const token = localStorage.getItem("token")
+        axios.get('http://localhost:8080/accounts/all-accounts', {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
             .then(response => {
                 console.log(response.data);
                 setAccounts(response.data);
@@ -34,7 +39,12 @@ const ManageUsers = () => {
     };
 
     const handleDelete = (accountId) => {
-        axios.delete(`http://localhost:8080/accounts/delete-account/${accountId}`)
+        const token = localStorage.getItem("token")
+        axios.delete(`http://localhost:8080/accounts/delete-account/${accountId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
             .then(() => {
                 setAccounts(filteredAccounts.filter(account => account.accountId !== accountId));
             })

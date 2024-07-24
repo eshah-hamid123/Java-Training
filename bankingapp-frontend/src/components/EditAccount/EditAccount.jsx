@@ -17,7 +17,12 @@ const EditAccount = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/accounts/${accountId}`)
+        const token = localStorage.getItem('token');
+        axios.get(`http://localhost:8080/accounts/${accountId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
             .then(response => {
                 setAccount(response.data);
                 setLoading(false);
@@ -38,7 +43,14 @@ const EditAccount = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.put(`http://localhost:8080/accounts/edit-account/${accountId}`, account)
+        const token = localStorage.getItem('token');
+        console.log("hereeeee")
+        console.log(token)
+        axios.put(`http://localhost:8080/accounts/edit-account/${accountId}`, account, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
             .then(response => {
                 navigate('/manage-users');
             })

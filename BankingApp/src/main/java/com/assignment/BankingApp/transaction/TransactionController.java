@@ -32,14 +32,14 @@ public class TransactionController {
 
     //@PreAuthorize("hasAnyAuthority('admin')")
     @GetMapping("/all-transactions")
-    public ResponseEntity<List<Transaction>> getAllTransactions(@RequestParam(name = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<List<TransactionHistoryDTO>> getAllTransactions(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                                             @RequestParam(name = "size", defaultValue = "1000") Integer size) {
-        List<Transaction> transactions = transactionService.findAll(page, size);
+        List<TransactionHistoryDTO> transactions = transactionService.findAll(page, size);
         return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/{transactionId}")
-    public ResponseEntity<Transaction> getBlogById(@PathVariable("transactionId") Long transactionId) {
+    public ResponseEntity<Transaction> getTransactionById(@PathVariable("transactionId") Long transactionId) {
         Optional<Transaction> transaction = transactionService.getTransactionById(transactionId);
         if (transaction.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -49,14 +49,14 @@ public class TransactionController {
     }
 
     @GetMapping("/debit-transactions")
-    public ResponseEntity<List<Transaction>> getDebitTransactions() {
-        List<Transaction> transactions = transactionService.getDebitTransactions();
+    public ResponseEntity<List<TransactionHistoryDTO>> getDebitTransactions() {
+        List<TransactionHistoryDTO> transactions = transactionService.getDebitTransactions();
         return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/credit-transactions")
-    public ResponseEntity<List<Transaction>> getCreditTransactions() {
-        List<Transaction> transactions = transactionService.getCreditTransactions();
+    public ResponseEntity<List<TransactionHistoryDTO>> getCreditTransactions() {
+        List<TransactionHistoryDTO> transactions = transactionService.getCreditTransactions();
         return ResponseEntity.ok(transactions);
     }
 }
