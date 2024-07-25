@@ -1,14 +1,15 @@
 /* src/components/Navbar.css */
 .navbar {
     background-color: #155f35 !important;
-    margin-bottom: 50px; /* Dark green */
 }
 
 .navbar-title {
     flex-grow: 1;
+    
 }
 
 .navbar-links a {
     text-decoration: none;
     color: white;
+    margin-right: 10px;
 }

@@ -9,13 +9,15 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     const handleLogin = () => {
-        navigate('/');
+        navigate('/login');
     };
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('role');
-        navigate('/login');
+        localStorage.removeItem('accountId');
+        console.log("hereeeee")
+        navigate('/');
     };
 
     return (
@@ -30,13 +32,15 @@ const Navbar = () => {
                             <>
                                 {userRole === 'admin' && (
                                     <>
+                                    <Button color="inherit" component={Link} to="/admin-dashboard">Admin Dashboard</Button>
                                     <Button color="inherit" component={Link} to="/manage-users">Manage Users</Button>
                                     <Button color="inherit" component={Link} to="/view-transactions">View Transactions</Button>
+                                    
                                     
                                   </>
                                 )}
                                 {userRole === 'account-holder' && (
-                                    <Button color="inherit" onClick={() => navigate('/account-holder-dashboard')}>Account Dashboard</Button>
+                                    <Button color="inherit" onClick={() => navigate('/account-holder-dashboard')}> Dashboard</Button>
                                 )}
                                 <Button color="inherit" onClick={handleLogout}>Logout</Button>
                             </>

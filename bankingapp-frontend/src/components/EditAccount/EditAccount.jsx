@@ -1,122 +1,161 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import {
+  Container,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  CircularProgress,
+  Alert
+} from '@mui/material';
+import Layout from '../Layout/Layout';
+import './EditAccount.css';
 
 const EditAccount = () => {
-    const { accountId } = useParams();
-    const [account, setAccount] = useState({
-        username: '',
-        password: '',
-        email: '',
-        address: '',
-        balance: '',
-        accountNumber: ''
+  const { accountId } = useParams();
+  const [account, setAccount] = useState({
+    username: '',
+    password: '',
+    email: '',
+    address: '',
+    balance: '',
+    accountNumber: ''
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    axios.get(`http://localhost:8080/accounts/${accountId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(response => {
+        setAccount(response.data);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError('Failed to fetch account details');
+        setLoading(false);
+      });
+  }, [accountId]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setAccount({
+      ...account,
+      [name]: value
     });
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const navigate = useNavigate();
+  };
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        axios.get(`http://localhost:8080/accounts/${accountId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          })
-            .then(response => {
-                setAccount(response.data);
-                setLoading(false);
-            })
-            .catch(err => {
-                setError('Failed to fetch account details');
-                setLoading(false);
-            });
-    }, [accountId]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    axios.put(`http://localhost:8080/accounts/edit-account/${accountId}`, account, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(response => {
+        navigate('/manage-users');
+      })
+      .catch(err => {
+        setError('Failed to update account' + err);
+      });
+  };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setAccount({
-            ...account,
-            [name]: value
-        });
-    };
+  if (loading) return (
+    <Layout>
+      <Container component="main" maxWidth="sm" className="edit-account-container">
+        <CircularProgress />
+      </Container>
+    </Layout>
+  );
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const token = localStorage.getItem('token');
-        console.log("hereeeee")
-        console.log(token)
-        axios.put(`http://localhost:8080/accounts/edit-account/${accountId}`, account, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          })
-            .then(response => {
-                navigate('/manage-users');
-            })
-            .catch(err => {
-                setError('Failed to update account' + err);
-            });
-    };
+  if (error) return (
+    <Layout>
+      <Container component="main" maxWidth="sm" className="edit-account-container">
+        <Alert severity="error">{error}</Alert>
+      </Container>
+    </Layout>
+  );
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>{error}</p>;
-
-    return (
-        <div>
-            <h2>Edit Account</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Username:
-                    <input
-                        type="text"
-                        name="username"
-                        value={account.username}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Password:
-                    <input
-                        type="password"
-                        name="password"
-                        value={account.password}
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    Email:
-                    <input
-                        type="email"
-                        name="email"
-                        value={account.email}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Address:
-                    <input
-                        type="text"
-                        name="address"
-                        value={account.address}
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    Balance:
-                    <input
-                        type="number"
-                        name="balance"
-                        value={account.balance}
-                        onChange={handleChange}
-                    />
-                </label>
-                <button type="submit">Update</button>
-            </form>
-        </div>
-    );
+  return (
+    <Layout>
+      <Container component="main" maxWidth="sm" className="edit-account-container">
+        <Paper elevation={5} className="edit-account-paper">
+          <Typography variant="h4" gutterBottom className="edit-account-title">
+            Edit Account
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Username"
+              name="username"
+              value={account.username}
+              onChange={handleChange}
+              fullWidth
+              required
+              margin="normal"
+              variant="outlined"
+            />
+            <TextField
+              label="Password"
+              name="password"
+              type="password"
+              value={account.password}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              variant="outlined"
+            />
+            <TextField
+              label="Email"
+              name="email"
+              type="email"
+              value={account.email}
+              onChange={handleChange}
+              fullWidth
+              required
+              margin="normal"
+              variant="outlined"
+            />
+            <TextField
+              label="Address"
+              name="address"
+              value={account.address}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              variant="outlined"
+            />
+            <TextField
+              label="Balance"
+              name="balance"
+              type="number"
+              value={account.balance}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              variant="outlined"
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="success"
+              fullWidth
+              className="edit-account-button"
+            >
+              Update
+            </Button>
+          </form>
+        </Paper>
+      </Container>
+    </Layout>
+  );
 };
 
 export default EditAccount;

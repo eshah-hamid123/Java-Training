@@ -3,6 +3,8 @@ package com.assignment.BankingApp.transaction;
 import com.assignment.BankingApp.account.Account;
 import com.assignment.BankingApp.account.AccountRepository;
 import com.assignment.BankingApp.config.ApiSecurityConfiguration;
+import com.assignment.BankingApp.exceptionhandling.AccountNotFoundException;
+import com.assignment.BankingApp.exceptionhandling.InsufficientBalanceException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,15 +36,26 @@ public class TransactionService {
     }
 
     @Transactional
-    public Transaction createTransaction(TransactionDTO newTransaction) {
+    public TransactionHistoryDTO createTransaction(TransactionDTO newTransaction) {
         Account senderAccount = getCurrentLoggedInUser();
         Account receiverAccount = getAccountByNumber(newTransaction.getRecieverAccountNumber());
 
-        validateSufficientBalance(senderAccount, newTransaction.getAmount());
+        if (senderAccount.getBalance() < newTransaction.getAmount()) {
+            throw new InsufficientBalanceException("Insufficient balance in sender account");
+        }
 
         updateAccountBalances(senderAccount, receiverAccount, newTransaction.getAmount());
 
-        return saveTransaction(newTransaction, senderAccount, receiverAccount);
+        Transaction savedTransaction =  saveTransaction(newTransaction, senderAccount, receiverAccount);
+        return new TransactionHistoryDTO(
+                savedTransaction.getId(),
+                savedTransaction.getDescription(),
+                savedTransaction.getAmount(),
+                savedTransaction.getDate(),
+                senderAccount.getUsername(),
+                receiverAccount.getUsername()
+
+        );
     }
 
     public List<TransactionHistoryDTO> findAll(Integer page, Integer size) {
@@ -128,13 +141,7 @@ public class TransactionService {
 
     private Account getAccountByNumber(String accountNumber) {
         return accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new RuntimeException("Account not found for account number: " + accountNumber));
-    }
-
-    private void validateSufficientBalance(Account senderAccount, Long amount) {
-        if (senderAccount.getBalance() < amount) {
-            throw new RuntimeException("Insufficient balance in sender account");
-        }
+                .orElseThrow(() -> new AccountNotFoundException("Account not found for account number: " + accountNumber));
     }
 
     private void updateAccountBalances(Account senderAccount, Account receiverAccount, Long amount) {

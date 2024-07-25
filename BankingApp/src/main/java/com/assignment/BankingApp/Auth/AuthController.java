@@ -2,11 +2,10 @@ package com.assignment.BankingApp.Auth;
 
 import com.assignment.BankingApp.account.Account;
 import com.assignment.BankingApp.account.AccountRepository;
-import com.assignment.BankingApp.error.ErrorResponse;
+import com.assignment.BankingApp.exceptionhandling.ErrorResponse;
 import com.assignment.BankingApp.login.Login;
 import com.assignment.BankingApp.security.JwtHelper;
 import com.assignment.BankingApp.security.JwtResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

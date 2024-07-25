@@ -28,31 +28,31 @@ const AdminDashboard = () => {
   
   return (
     <Layout>
-      <Container component="main" maxWidth="md">
-        <Paper elevation={5} className="dashboard-paper">
-          <Typography variant="h4" gutterBottom className="dashboard-title">
+      <Container component="main" maxWidth="md" className="dashboard-container-admin">
+        <Paper elevation={5} className="dashboard-paper-admin">
+          <Typography variant="h4" gutterBottom className="dashboard-title-admin">
             Welcome, Admin
           </Typography>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" gutterBottom className="dashboard-subtitle-admin">
             Here’s an overview of the system:
           </Typography>
           <Grid container spacing={4}>
             <Grid item xs={12} sm={6} md={4}>
-              <Box className="dashboard-card">
-                <Typography variant="h6" className="card-title">Total Users</Typography>
-                <Typography variant="h4" className="card-value">{totalUsers}</Typography>
+              <Box className="dashboard-card-admin">
+                <Typography variant="h6" className="card-title-admin">Total Users</Typography>
+                <Typography variant="h4" className="card-value-admin">{totalUsers}</Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <Box className="dashboard-card">
-                <Typography variant="h6" className="card-title">Pending Transactions</Typography>
-                <Typography variant="h4" className="card-value">456</Typography>
+              <Box className="dashboard-card-admin">
+                <Typography variant="h6" className="card-title-admin">Pending Transactions</Typography>
+                <Typography variant="h4" className="card-value-admin">456</Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <Box className="dashboard-card">
-                <Typography variant="h6" className="card-title">System Status</Typography>
-                <Typography variant="h4" className="card-value">Operational</Typography>
+              <Box className="dashboard-card-admin">
+                <Typography variant="h6" className="card-title-admin">System Status</Typography>
+                <Typography variant="h4" className="card-value-admin">Operational</Typography>
               </Box>
             </Grid>
           </Grid>

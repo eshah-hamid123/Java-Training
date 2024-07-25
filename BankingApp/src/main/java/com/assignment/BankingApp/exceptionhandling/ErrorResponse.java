@@ -1,8 +1,7 @@
-package com.assignment.BankingApp.error;
+package com.assignment.BankingApp.exceptionhandling;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter

@@ -23,14 +23,15 @@ public class TransactionController {
     @PostMapping("/post")
     public ResponseEntity<?> postTransaction(@RequestBody TransactionDTO transaction) {
         try {
-            Transaction savedTransaction = transactionService.createTransaction(transaction);
+            TransactionHistoryDTO savedTransaction = transactionService.createTransaction(transaction);
             return new ResponseEntity<>(savedTransaction, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    //@PreAuthorize("hasAnyAuthority('admin')")
+
+    @PreAuthorize("hasAnyAuthority('admin')")
     @GetMapping("/all-transactions")
     public ResponseEntity<List<TransactionHistoryDTO>> getAllTransactions(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                                             @RequestParam(name = "size", defaultValue = "1000") Integer size) {
