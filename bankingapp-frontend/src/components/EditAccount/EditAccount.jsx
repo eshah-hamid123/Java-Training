@@ -29,7 +29,7 @@ const EditAccount = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    axios.get(`http://localhost:8080/accounts/${accountId}`, {
+    axios.get(`http://localhost:8080/v1/accounts/get-account/${accountId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -55,7 +55,7 @@ const EditAccount = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    axios.put(`http://localhost:8080/accounts/edit-account/${accountId}`, account, {
+    axios.put(`http://localhost:8080/v1/accounts/edit-account/${accountId}`, account, {
       headers: {
         Authorization: `Bearer ${token}`
       }

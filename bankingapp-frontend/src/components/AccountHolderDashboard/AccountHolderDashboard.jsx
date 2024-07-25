@@ -20,7 +20,7 @@ const AccountHolderDashboard = () => {
 
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:8080/accounts/${accountId}`,
+        `http://localhost:8080/v1/accounts/get-account/${accountId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

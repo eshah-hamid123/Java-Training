@@ -30,9 +30,6 @@ const TransactionSuccessful = () => {
                             <Divider />
                             <Box mt={2}>
                                 <Typography variant="body1" className="transaction-info">
-                                    <strong>ID:</strong> {transaction.id}
-                                </Typography>
-                                <Typography variant="body1" className="transaction-info">
                                     <strong>Description:</strong> {transaction.description}
                                 </Typography>
                                 <Typography variant="body1" className="transaction-info">

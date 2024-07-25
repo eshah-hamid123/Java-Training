@@ -11,7 +11,7 @@ const AdminDashboard = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const usersResponse = await axios.get("http://localhost:8080/accounts/all-accounts", {
+        const usersResponse = await axios.get("http://localhost:8080/v1/accounts/all-accounts", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

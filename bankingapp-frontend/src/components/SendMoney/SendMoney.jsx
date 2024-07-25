@@ -27,7 +27,7 @@ const SendMoney = () => {
         setErrorMessage('');
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post('http://localhost:8080/transactions/post', formData, {
+            const response = await axios.post('http://localhost:8080/v1/transactions/transfer-money', formData, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

@@ -38,7 +38,7 @@ const CreateAccount = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:8080/accounts/create-account",
+        "http://localhost:8080/v1/accounts/create-account",
         formData,
         {
           headers: {

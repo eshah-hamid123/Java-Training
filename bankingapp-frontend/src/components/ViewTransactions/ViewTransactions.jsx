@@ -27,7 +27,7 @@ const ViewTransactions = () => {
     const fetchTransactions = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8080/transactions/all-transactions', {
+        const response = await axios.get('http://localhost:8080/v1/transactions/all-transactions', {
           headers: {
             Authorization: `Bearer ${token}`
           }

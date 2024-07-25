@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/v1/accounts")
 public class AccountController {
     private final AccountService accountService;
 
@@ -47,7 +47,7 @@ public class AccountController {
     }
 
     @PreAuthorize("hasAnyAuthority('admin','account-holder')")
-    @GetMapping("/{accountId}")
+    @GetMapping("/get-account/{accountId}")
     public ResponseEntity<Account> getAccountById(@PathVariable Long accountId) {
         Optional<Account> userAccount = accountService.getAccountById(accountId);
         if (userAccount.isEmpty()) {

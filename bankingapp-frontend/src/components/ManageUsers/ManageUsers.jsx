@@ -38,7 +38,7 @@ const ManageUsers = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:8080/accounts/all-accounts", {
+      .get("http://localhost:8080/v1/accounts/all-accounts", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -60,17 +60,17 @@ const ManageUsers = () => {
     navigate(`/edit-account/${accountId}`);
   };
 
-  const handleDelete = (accountId) => {
+  const handleDelete = (id) => {
     const token = localStorage.getItem("token");
     axios
-      .delete(`http://localhost:8080/accounts/delete-account/${accountId}`, {
+      .delete(`http://localhost:8080/v1/accounts/delete-account/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then(() => {
         setAccounts(
-          accounts.filter((account) => account.accountId !== accountId)
+          accounts.filter((account) => account.id !== id)
         );
         handleClose();
       })
@@ -117,7 +117,7 @@ const ManageUsers = () => {
           >
             Create Account
           </Button>
-          {accounts.length === 0 ? (
+          {accounts.length <= 1 ? (
             <Typography variant="h6">No accounts available</Typography>
           ) : (
             <TableContainer component={Paper}>
@@ -133,7 +133,7 @@ const ManageUsers = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {accounts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((account) => (
+                  {accounts.slice(1).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((account) => (
                     <TableRow key={account.id}>
                       <TableCell>{account.username}</TableCell>
                       <TableCell>{account.email}</TableCell>
@@ -161,7 +161,7 @@ const ManageUsers = () => {
                   <TableRow>
                     <TablePagination
                       rowsPerPageOptions={[10, 25, 50]}
-                      count={accounts.length}
+                      count={accounts.length - 1}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       onPageChange={handleChangePage}

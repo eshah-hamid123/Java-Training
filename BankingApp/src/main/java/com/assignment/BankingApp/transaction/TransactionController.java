@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/transactions")
+@RequestMapping("/v1/transactions")
 public class TransactionController {
     private final TransactionService transactionService;
 
@@ -20,7 +20,7 @@ public class TransactionController {
     }
 
 
-    @PostMapping("/post")
+    @PostMapping("/transfer-money")
     public ResponseEntity<?> postTransaction(@RequestBody TransactionDTO transaction) {
         try {
             TransactionHistoryDTO savedTransaction = transactionService.createTransaction(transaction);
@@ -49,13 +49,13 @@ public class TransactionController {
         return ResponseEntity.ok(transaction.get());
     }
 
-    @GetMapping("/debit-transactions")
+    @GetMapping("/get-debit-transactions")
     public ResponseEntity<List<TransactionHistoryDTO>> getDebitTransactions() {
         List<TransactionHistoryDTO> transactions = transactionService.getDebitTransactions();
         return ResponseEntity.ok(transactions);
     }
 
-    @GetMapping("/credit-transactions")
+    @GetMapping("/get-credit-transactions")
     public ResponseEntity<List<TransactionHistoryDTO>> getCreditTransactions() {
         List<TransactionHistoryDTO> transactions = transactionService.getCreditTransactions();
         return ResponseEntity.ok(transactions);
