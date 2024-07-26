@@ -55,7 +55,7 @@ class AuthControllerTest {
 
     @Test
     void testLoginSuccess() {
-        // Arrange
+
         Login login = new Login();
         login.setUsername("eisha");
         login.setPassword("eisha123");
@@ -68,10 +68,7 @@ class AuthControllerTest {
         account.setUsername("eisha");
         when(accountRepository.findByUsername(anyString())).thenReturn(Optional.of(account));
 
-        // Act
         ResponseEntity<?> responseEntity = authController.login(login);
-
-        // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         JwtResponse response = (JwtResponse) responseEntity.getBody();
         assertEquals("mockToken", response.getJwtToken());
@@ -80,7 +77,6 @@ class AuthControllerTest {
 
     @Test
     void testLoginFailure() {
-        // Arrange
         Login login = new Login();
         login.setUsername("admin");
         login.setPassword("wrongpassword");
@@ -88,10 +84,8 @@ class AuthControllerTest {
         doThrow(new BadCredentialsException("Invalid username or password"))
                 .when(manager).authenticate(any(UsernamePasswordAuthenticationToken.class));
 
-        // Act
         ResponseEntity<?> responseEntity = authController.login(login);
 
-        // Assert
         assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
         ErrorResponse response = (ErrorResponse) responseEntity.getBody();
         assertEquals("Invalid username or password", response.getMessage());

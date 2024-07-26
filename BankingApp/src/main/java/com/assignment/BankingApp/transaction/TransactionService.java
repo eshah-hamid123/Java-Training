@@ -134,11 +134,6 @@ public class TransactionService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    private Account getAccountByUserId(Long accountId) {
-        return accountRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("Account not found for user ID: " + accountId));
-    }
-
     private Account getAccountByNumber(String accountNumber) {
         return accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found for account number: " + accountNumber));

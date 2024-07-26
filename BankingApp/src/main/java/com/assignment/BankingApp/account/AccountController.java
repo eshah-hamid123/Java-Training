@@ -1,20 +1,11 @@
 package com.assignment.BankingApp.account;
-
-import com.assignment.BankingApp.config.ApiSecurityConfiguration;
-import com.assignment.BankingApp.login.Login;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +14,6 @@ import java.util.Optional;
 public class AccountController {
     private final AccountService accountService;
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiSecurityConfiguration.class);
     @Autowired
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
@@ -36,12 +26,9 @@ public class AccountController {
             Account newAccount = accountService.createAccount(account);
             return new ResponseEntity<>(newAccount, HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
-            // Log the exception message for debugging purposes
-            logger.error("DataIntegrityViolationException: " + e.getMessage(), e);
-           // String message = getConstraintName(e.getMessage());
+
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
-            logger.error("Exception: " + e.getMessage(), e);
             return new ResponseEntity<>("Error creating account", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -72,51 +72,55 @@ const TransactionHistory = () => {
             Transaction History
           </Typography>
           {errorMessage && <Typography color="error">{errorMessage}</Typography>}
-          
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ color: "white" }}>Type</TableCell>
-                  <TableCell sx={{ color: "white" }}>Date</TableCell>
-                  <TableCell sx={{ color: "white" }}>Description</TableCell>
-                  <TableCell sx={{ color: "white" }}>Amount</TableCell>
-                  <TableCell sx={{ color: "white" }}>User</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((transaction) => (
-                  <TableRow key={transaction.id}>
-                    <TableCell>
-                      {transaction.type === 'debit' ? (
-                        <IconButton><ArrowDownward color="error" /></IconButton>
-                      ) : (
-                        <IconButton><ArrowUpward color="success" /></IconButton>
-                      )}
-                    </TableCell>
-                    <TableCell>{new Date(transaction.date).toLocaleString()}</TableCell>
-                    <TableCell>{transaction.description}</TableCell>
-                    <TableCell>${transaction.amount}</TableCell>
-                    <TableCell>
-                      {transaction.type === 'debit' ? transaction.receiverUsername : transaction.senderUsername}
-                    </TableCell>
+
+          {transactions.length === 0 ? (
+            <Typography>No transactions done</Typography>
+          ) : (
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ color: "white" }}>Type</TableCell>
+                    <TableCell sx={{ color: "white" }}>Date</TableCell>
+                    <TableCell sx={{ color: "white" }}>Description</TableCell>
+                    <TableCell sx={{ color: "white" }}>Amount</TableCell>
+                    <TableCell sx={{ color: "white" }}>User</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TablePagination
-                    rowsPerPageOptions={[10, 25, 50]}
-                    count={transactions.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((transaction) => (
+                    <TableRow key={transaction.id}>
+                      <TableCell>
+                        {transaction.type === 'debit' ? (
+                          <IconButton><ArrowDownward color="error" /></IconButton>
+                        ) : (
+                          <IconButton><ArrowUpward color="success" /></IconButton>
+                        )}
+                      </TableCell>
+                      <TableCell>{new Date(transaction.date).toLocaleString()}</TableCell>
+                      <TableCell>{transaction.description}</TableCell>
+                      <TableCell>${transaction.amount}</TableCell>
+                      <TableCell>
+                        {transaction.type === 'debit' ? transaction.receiverUsername : transaction.senderUsername}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[10, 25, 50]}
+                      count={transactions.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </TableContainer>
+          )}
         </Paper>
       </Container>
     </Layout>

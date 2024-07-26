@@ -1,9 +1,5 @@
 package com.assignment.BankingApp.account;
-
-import com.assignment.BankingApp.config.ApiSecurityConfiguration;
 import com.assignment.BankingApp.login.Login;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -7,6 +7,7 @@ export function useAuth() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
+    
     if (token) {
       const role = localStorage.getItem("role");
       setUserRole(role);

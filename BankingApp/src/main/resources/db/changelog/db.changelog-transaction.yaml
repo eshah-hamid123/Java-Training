@@ -50,6 +50,7 @@ databaseChangeLog:
             referencedTableName: accounts
             referencedColumnNames: account_id
             constraintName: fk_transactions_sender_account
+            onDelete: CASCADE
 
         - addForeignKeyConstraint:
             baseTableName: transactions
@@ -57,3 +58,4 @@ databaseChangeLog:
             referencedTableName: accounts
             referencedColumnNames: account_id
             constraintName: fk_transactions_receiver_account
+            onDelete: CASCADE

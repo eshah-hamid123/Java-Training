@@ -8,13 +8,11 @@ import java.util.Optional;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findByAccountNumber(String accountNumber);
-    public Optional<Account> findByUsername(String username);
+     Optional<Account> findByUsername(String username);
     boolean existsByUsername(String username);
 
-    // Method to check if an email already exists
     boolean existsByEmail(String email);
 
-    // Method to check if an account number already exists
     boolean existsByAccountNumber(String accountNumber);
 
 }
