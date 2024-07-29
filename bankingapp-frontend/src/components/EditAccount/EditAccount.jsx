@@ -40,6 +40,7 @@ const EditAccount = () => {
         setLoading(false);
       })
       .catch((err) => {
+        console.log(err.response.data)
         setError("Failed to fetch account details");
         setLoading(false);
       });

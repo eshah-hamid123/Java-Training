@@ -34,6 +34,7 @@ public class AccountController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('admin', 'account-holder')")
     @GetMapping("/get-account/{accountId}")
     public ResponseEntity<?> getAccountById(@PathVariable Long accountId) {
         try {
@@ -41,10 +42,8 @@ public class AccountController {
             if (userAccount.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-
             return ResponseEntity.ok(userAccount.get());
         } catch (AccessDeniedException e) {
-
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied.");
         }
     }
