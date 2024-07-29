@@ -2,6 +2,9 @@ package com.assignment.BankingApp.account;
 import com.assignment.BankingApp.Auth.Login;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +17,12 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
 
-   // private static final Logger logger = LoggerFactory.getLogger(ApiSecurityConfiguration.class);
-
     public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     public Account createAccount(Account account) {
-        // Check for existing accounts manually
         if (accountRepository.existsByUsername(account.getUsername())) {
             throw new DataIntegrityViolationException("Username already exists");
         }
@@ -33,16 +33,19 @@ public class AccountService {
             throw new DataIntegrityViolationException("Account number already exists");
         }
 
-        // Set role and encode password
         account.setRole("account-holder");
         account.setPassword(passwordEncoder.encode(account.getPassword()));
 
-        // Save account
         return accountRepository.save(account);
     }
 
     public Optional<Account> getAccountById(Long accountId) {
-        return accountRepository.findById(accountId);
+        Account account = getCurrentLoggedInUser();
+        if (account.getId().equals(accountId)) {
+            return accountRepository.findById(accountId);
+        } else {
+            throw new AccessDeniedException("You are not authorized to access this account.");
+        }
     }
 
     public Account updateAccount(Long accountId, Account updatedAccount) {
@@ -76,14 +79,11 @@ public class AccountService {
         return accountRepository.findAll(PageRequest.of(page, size)).getContent();
     }
 
-    public Optional<Account> login(Login login) {
-        Optional<Account> accountOptional = accountRepository.findByUsername(login.getUsername());
-        if (accountOptional.isPresent()) {
-            Account account = accountOptional.get();
-            if (passwordEncoder.matches(login.getPassword(), account.getPassword())) {
-                return Optional.of(account);
-            }
-        }
-        return Optional.empty();
+    private Account getCurrentLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loggedInUsername = authentication.getName();
+
+        return accountRepository.findByUsername(loggedInUsername)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }

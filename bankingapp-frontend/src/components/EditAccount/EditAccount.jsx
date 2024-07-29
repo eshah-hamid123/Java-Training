@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Container,
   Paper,
@@ -8,38 +8,39 @@ import {
   TextField,
   Button,
   CircularProgress,
-  Alert
-} from '@mui/material';
-import Layout from '../Layout/Layout';
-import './EditAccount.css';
+  Alert,
+} from "@mui/material";
+import Layout from "../Layout/Layout";
+import "./EditAccount.css";
 
 const EditAccount = () => {
   const { accountId } = useParams();
   const [account, setAccount] = useState({
-    username: '',
-    password: '',
-    email: '',
-    address: '',
-    balance: '',
-    accountNumber: ''
+    username: "",
+    password: "",
+    email: "",
+    address: "",
+    balance: "",
+    accountNumber: "",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    axios.get(`http://localhost:8080/v1/accounts/get-account/${accountId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then(response => {
+    const token = localStorage.getItem("token");
+    axios
+      .get(`http://localhost:8080/v1/accounts/get-account/${accountId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
         setAccount(response.data);
         setLoading(false);
       })
-      .catch(err => {
-        setError('Failed to fetch account details');
+      .catch((err) => {
+        setError("Failed to fetch account details");
         setLoading(false);
       });
   }, [accountId]);
@@ -48,45 +49,64 @@ const EditAccount = () => {
     const { name, value } = e.target;
     setAccount({
       ...account,
-      [name]: value
+      [name]: value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
-    axios.put(`http://localhost:8080/v1/accounts/edit-account/${accountId}`, account, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then(response => {
-        navigate('/manage-users');
+    const token = localStorage.getItem("token");
+    axios
+      .put(
+        `http://localhost:8080/v1/accounts/edit-account/${accountId}`,
+        account,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        navigate("/manage-users");
       })
-      .catch(err => {
-        setError('Failed to update account' + err);
+      .catch((err) => {
+        setError("Failed to update account" + err);
       });
   };
 
-  if (loading) return (
-    <Layout>
-      <Container component="main" maxWidth="sm" className="edit-account-container">
-        <CircularProgress />
-      </Container>
-    </Layout>
-  );
+  if (loading)
+    return (
+      <Layout>
+        <Container
+          component="main"
+          maxWidth="sm"
+          className="edit-account-container"
+        >
+          <CircularProgress />
+        </Container>
+      </Layout>
+    );
 
-  if (error) return (
-    <Layout>
-      <Container component="main" maxWidth="sm" className="edit-account-container">
-        <Alert severity="error">{error}</Alert>
-      </Container>
-    </Layout>
-  );
+  if (error)
+    return (
+      <Layout>
+        <Container
+          component="main"
+          maxWidth="sm"
+          className="edit-account-container"
+        >
+          <Alert severity="error">{error}</Alert>
+        </Container>
+      </Layout>
+    );
 
   return (
     <Layout>
-      <Container component="main" maxWidth="sm" className="edit-account-container">
+      <Container
+        component="main"
+        maxWidth="sm"
+        className="edit-account-container"
+      >
         <Paper elevation={5} className="edit-account-paper">
           <Typography variant="h4" gutterBottom className="edit-account-title">
             Edit Account

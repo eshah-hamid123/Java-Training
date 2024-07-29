@@ -2,7 +2,6 @@ package com.assignment.BankingApp.Auth;
 
 import com.assignment.BankingApp.account.Account;
 import com.assignment.BankingApp.account.AccountRepository;
-import com.assignment.BankingApp.exceptionhandling.ErrorResponse;
 import com.assignment.BankingApp.security.JwtHelper;
 import com.assignment.BankingApp.security.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +51,7 @@ public class AuthController {
                     .build();
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new ErrorResponse("Invalid username or password"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -64,7 +63,7 @@ public class AuthController {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorResponse> exceptionHandler(BadCredentialsException e) {
-        return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<?> exceptionHandler(BadCredentialsException e) {
+        return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
     }
 }

@@ -5,6 +5,7 @@ import com.assignment.BankingApp.account.AccountRepository;
 import com.assignment.BankingApp.config.ApiSecurityConfiguration;
 import com.assignment.BankingApp.exceptionhandling.AccountNotFoundException;
 import com.assignment.BankingApp.exceptionhandling.InsufficientBalanceException;
+import com.assignment.BankingApp.exceptionhandling.SameAccountException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,9 @@ public class TransactionService {
         Account senderAccount = getCurrentLoggedInUser();
         Account receiverAccount = getAccountByNumber(newTransaction.getRecieverAccountNumber());
 
+        if (senderAccount.equals(receiverAccount)) {
+            throw new SameAccountException("You can't transfer money to your account");
+        }
         if (senderAccount.getBalance() < newTransaction.getAmount()) {
             throw new InsufficientBalanceException("Insufficient balance in sender account");
         }

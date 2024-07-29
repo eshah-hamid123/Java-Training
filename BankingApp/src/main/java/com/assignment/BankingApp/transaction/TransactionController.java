@@ -20,6 +20,7 @@ public class TransactionController {
     }
 
 
+    @PreAuthorize("hasAnyAuthority('account-holder')")
     @PostMapping("/transfer-money")
     public ResponseEntity<?> postTransaction(@RequestBody TransactionDTO transaction) {
         try {

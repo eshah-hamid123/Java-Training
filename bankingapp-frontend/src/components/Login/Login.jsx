@@ -51,7 +51,7 @@ const Login = () => {
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error.response.data);
       } else {
         setErrorMessage("An error occurred. Please try again.");
       }

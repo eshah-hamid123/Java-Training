@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -33,16 +34,21 @@ public class AccountController {
         }
     }
 
-    @PreAuthorize("hasAnyAuthority('admin','account-holder')")
     @GetMapping("/get-account/{accountId}")
-    public ResponseEntity<Account> getAccountById(@PathVariable Long accountId) {
-        Optional<Account> userAccount = accountService.getAccountById(accountId);
-        if (userAccount.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<?> getAccountById(@PathVariable Long accountId) {
+        try {
+            Optional<Account> userAccount = accountService.getAccountById(accountId);
+            if (userAccount.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
 
-        return ResponseEntity.ok(userAccount.get());
+            return ResponseEntity.ok(userAccount.get());
+        } catch (AccessDeniedException e) {
+
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied.");
+        }
     }
+
 
     @PreAuthorize("hasAnyAuthority('admin')")
     @PutMapping("/edit-account/{accountId}")
