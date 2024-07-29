@@ -3,7 +3,6 @@ package com.assignment.BankingApp.Auth;
 import com.assignment.BankingApp.account.Account;
 import com.assignment.BankingApp.account.AccountRepository;
 import com.assignment.BankingApp.exceptionhandling.ErrorResponse;
-import com.assignment.BankingApp.login.Login;
 import com.assignment.BankingApp.security.JwtHelper;
 import com.assignment.BankingApp.security.JwtResponse;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package com.assignment.BankingApp.login;
+package com.assignment.BankingApp.Auth;
 
 import lombok.Getter;
 import lombok.Setter;

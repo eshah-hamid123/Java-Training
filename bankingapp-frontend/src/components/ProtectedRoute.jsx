@@ -1,11 +1,11 @@
-import React from 'react';
-import { useAuth } from '../hooks/useAuth';
+import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../hooks/AuthContext"; // Adjust the import path as needed
 
 const ProtectedRoute = () => {
-  const { isAuthenticated, userRole } = useAuth();
+  const { authState } = useAuth();
 
-  return isAuthenticated === true?<Outlet/>:<Navigate to="login"/>;
+  return authState.isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default ProtectedRoute;

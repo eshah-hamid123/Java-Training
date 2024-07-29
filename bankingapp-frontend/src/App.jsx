@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
+  Outlet,
 } from "react-router-dom";
-import Login from "./components/Login/Login"; // Adjust the import paths as needed
+import Login from "./components/Login/Login";
 import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
 import AccountHolderDashboard from "./components/AccountHolderDashboard/AccountHolderDashboard";
 import ManageUsers from "./components/ManageUsers/ManageUsers";
@@ -15,23 +16,25 @@ import EditAccount from "./components/EditAccount/EditAccount";
 import TransactionHistory from "./components/TransactionHistory/TransactionHistory";
 import TransactionSuccess from "./components/TransactionSuccessful/TransactionSuccessful";
 import SendMoney from "./components/SendMoney/SendMoney";
-import { useAuth } from "./hooks/useAuth";
 import LandingPage from "./components/LandingPage/LandingPage";
 import Unauthorized from "./components/Unauthorized/Unauthorized";
+import { useAuth } from "./hooks/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute"; // Adjust the import path as needed
 
 function App() {
-  const { isAuthenticated, userRole } = useAuth();
-  const [authState, setAuthState] = useState({
-    isAuthenticated: false,
-    userRole: "",
-  });
+  const { authState, setAuthState } = useAuth();
 
   useEffect(() => {
-    setAuthState({
-      isAuthenticated,
-      userRole,
-    });
-  }, [isAuthenticated, userRole]);
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (token) {
+      setAuthState({
+        isAuthenticated: true,
+        userRole: role,
+      });
+    }
+  }, [setAuthState]);
 
   return (
     <Router>
@@ -50,46 +53,52 @@ function App() {
             )
           }
         />
-
         <Route path="/login" element={<Login />} />
-
-        {authState.userRole === "admin" ? (
-          <>
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
-            <Route path="/manage-users" element={<ManageUsers />} />
-            <Route path="/view-transactions" element={<ViewTransactions />} />
-            <Route path="/create-account" element={<CreateAccount />} />
-            <Route path="/edit-account/:accountId" element={<EditAccount />} />
-            <Route
-              path="/account-holder-dashboard"
-              element={<Unauthorized />}
-            />
-            <Route path="/send-money" element={<Unauthorized />} />
-            <Route path="/transaction-history" element={<Unauthorized />} />
-            <Route path="/transaction-success" element={<Unauthorized />} />
-          </>
-        ) : (
-          <>
-            <Route
-              path="/account-holder-dashboard"
-              element={<AccountHolderDashboard />}
-            />
-            <Route path="/send-money" element={<SendMoney />} />
-            <Route
-              path="/transaction-history"
-              element={<TransactionHistory />}
-            />
-            <Route
-              path="/transaction-success"
-              element={<TransactionSuccess />}
-            />
-            <Route path="/admin-dashboard" element={<Unauthorized />} />
-            <Route path="/manage-users" element={<Unauthorized />} />
-            <Route path="/view-transactions" element={<Unauthorized />} />
-            <Route path="/create-account" element={<Unauthorized />} />
-            <Route path="/edit-account/:accountId" element={<Unauthorized />} />
-          </>
-        )}
+        <Route element={<ProtectedRoute />}>
+          {authState.userRole === "admin" ? (
+            <>
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/manage-users" element={<ManageUsers />} />
+              <Route path="/view-transactions" element={<ViewTransactions />} />
+              <Route path="/create-account" element={<CreateAccount />} />
+              <Route
+                path="/edit-account/:accountId"
+                element={<EditAccount />}
+              />
+              <Route
+                path="/account-holder-dashboard"
+                element={<Unauthorized />}
+              />
+              <Route path="/send-money" element={<Unauthorized />} />
+              <Route path="/transaction-history" element={<Unauthorized />} />
+              <Route path="/transaction-success" element={<Unauthorized />} />
+            </>
+          ) : (
+            <>
+              <Route
+                path="/account-holder-dashboard"
+                element={<AccountHolderDashboard />}
+              />
+              <Route path="/send-money" element={<SendMoney />} />
+              <Route
+                path="/transaction-history"
+                element={<TransactionHistory />}
+              />
+              <Route
+                path="/transaction-success"
+                element={<TransactionSuccess />}
+              />
+              <Route path="/admin-dashboard" element={<Unauthorized />} />
+              <Route path="/manage-users" element={<Unauthorized />} />
+              <Route path="/view-transactions" element={<Unauthorized />} />
+              <Route path="/create-account" element={<Unauthorized />} />
+              <Route
+                path="/edit-account/:accountId"
+                element={<Unauthorized />}
+              />
+            </>
+          )}
+        </Route>
       </Routes>
     </Router>
   );

@@ -22,16 +22,16 @@
   
   .unauthorized-link {
     font-size: 1rem;
-    color: #007bff;
+    color:#3ead6e;
     text-decoration: none;
-    border: 1px solid #007bff;
+    border: 1px solid#2e8b57;
     padding: 0.5rem 1rem;
     border-radius: 5px;
     transition: background-color 0.3s, color 0.3s;
   }
   
   .unauthorized-link:hover {
-    background-color: #007bff;
+    background-color: #0f4d2a;
     color: #fff;
   }
   

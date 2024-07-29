@@ -10,7 +10,4 @@ import lombok.Setter;
 public class ErrorResponse {
     private String message;
 
-//    public ErrorResponse(String invalidUsernameOrPassword) {
-//        this.message = invalidUsernameOrPassword;
-//    }
 }

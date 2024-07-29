@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Container,
   Paper,
@@ -12,29 +12,34 @@ import {
   TablePagination,
   TableHead,
   TableRow,
-  Alert
-} from '@mui/material';
-import Layout from '../Layout/Layout';
-import './ViewTransactions.css';
+  Alert,
+} from "@mui/material";
+import Layout from "../Layout/Layout";
+import "./ViewTransactions.css";
 
 const ViewTransactions = () => {
   const [transactions, setTransactions] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8080/v1/transactions/all-transactions', {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          "http://localhost:8080/v1/transactions/all-transactions",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
+        );
         setTransactions(response.data);
       } catch (error) {
-        setErrorMessage('Error fetching transaction history. Please try again.');
+        setErrorMessage(
+          "Error fetching transaction history. Please try again."
+        );
       }
     };
 
@@ -52,16 +57,27 @@ const ViewTransactions = () => {
 
   return (
     <Layout>
-      <Container component="main" maxWidth="lg" className="view-transactions-container">
+      <Container
+        component="main"
+        maxWidth="lg"
+        className="view-transactions-container"
+      >
         <Paper elevation={5} className="view-transactions-paper">
-          <Typography variant="h4" gutterBottom className="view-transactions-title">
+          <Typography
+            variant="h4"
+            gutterBottom
+            className="view-transactions-title"
+          >
             All Transactions
           </Typography>
           {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
           {transactions.length === 0 ? (
             <Typography variant="h6">No transactions available</Typography>
           ) : (
-            <TableContainer component={Paper} className="view-transactions-table-container">
+            <TableContainer
+              component={Paper}
+              className="view-transactions-table-container"
+            >
               <Table>
                 <TableHead>
                   <TableRow>
@@ -73,15 +89,19 @@ const ViewTransactions = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((transaction) => (
-                    <TableRow key={transaction.id}> 
-                      <TableCell>{transaction.senderUsername}</TableCell>
-                      <TableCell>{transaction.receiverUsername}</TableCell>
-                      <TableCell>${transaction.amount.toFixed(2)}</TableCell>
-                      <TableCell>{transaction.description}</TableCell>
-                      <TableCell>{new Date(transaction.date).toLocaleString()}</TableCell>
-                    </TableRow>
-                  ))}
+                  {transactions
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((transaction) => (
+                      <TableRow key={transaction.id}>
+                        <TableCell>{transaction.senderUsername}</TableCell>
+                        <TableCell>{transaction.receiverUsername}</TableCell>
+                        <TableCell>${transaction.amount.toFixed(2)}</TableCell>
+                        <TableCell>{transaction.description}</TableCell>
+                        <TableCell>
+                          {new Date(transaction.date).toLocaleString()}
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
                 <TableFooter>
                   <TableRow>

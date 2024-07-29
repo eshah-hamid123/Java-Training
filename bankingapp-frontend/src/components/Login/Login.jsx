@@ -12,12 +12,14 @@ import {
 } from "@mui/material";
 import Layout from "../Layout/Layout";
 import "./Login.css";
+import { useAuth } from "../../hooks/AuthContext"; // Adjust the import path as needed
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const { setAuthState } = useAuth(); // Get setAuthState from useAuth
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -33,6 +35,11 @@ const Login = () => {
         localStorage.setItem("token", jwtToken);
         localStorage.setItem("role", role);
         localStorage.setItem("accountId", account.id);
+
+        setAuthState({
+          isAuthenticated: true,
+          userRole: role,
+        });
 
         if (role === "admin") {
           navigate("/admin-dashboard");
