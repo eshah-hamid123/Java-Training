@@ -1,4 +1,4 @@
-/* src/pages/AdminDashboard.css */
+
 .dashboard-paper-admin {
   padding: 30px;
   width: 100%;
@@ -9,11 +9,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 60vh; /* Ensure the paper takes at least 60% of viewport height */
+  min-height: 60vh; 
 }
 
 .dashboard-title-admin {
-  color: #2e8b57; /* Dark green */
+  color: #2e8b57; 
   margin-bottom: 20px;
   text-align: center;
   font-weight: bold;
@@ -26,25 +26,25 @@
 }
 
 .dashboard-subtitle-admin {
-  color: #3cb371; /* Medium sea green */
-  margin-bottom: 40px; /* Add spacing between title and cards */
+  color: #3cb371; 
+  margin-bottom: 40px; 
   text-align: center;
 }
 
 .dashboard-card-admin {
   padding: 20px;
-  background-color: #f0f8f0; /* Very light green */
+  background-color: #f0f8f0; 
   border-radius: 8px;
   text-align: center;
-  height: 150px; /* Adjust height as needed */
+  height: 150px;
 }
 
 .card-title-admin {
-  color: #3cb371; /* Medium sea green */
+  color: #3cb371; 
   margin-bottom: 10px;
 }
 
 .card-value-admin {
-  color: #2e8b57; /* Dark green */
+  color: #2e8b57; 
   font-weight: bold;
 }

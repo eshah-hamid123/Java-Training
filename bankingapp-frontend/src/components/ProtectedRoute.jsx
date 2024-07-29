@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../hooks/AuthContext"; // Adjust the import path as needed
+import { useAuth } from "../hooks/AuthContext";
 
 const ProtectedRoute = () => {
   const { authState } = useAuth();

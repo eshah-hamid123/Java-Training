@@ -1,5 +1,4 @@
 package com.assignment.BankingApp.account;
-import com.assignment.BankingApp.Auth.Login;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;

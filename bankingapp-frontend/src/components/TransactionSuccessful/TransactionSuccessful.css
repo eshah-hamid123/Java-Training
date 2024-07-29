@@ -10,14 +10,14 @@
 }
 
 .success-transaction-title {
-    color: #4caf50; /* Green color for success */
+    color: #4caf50; 
     font-weight: bold;
     margin-bottom: 1rem;
 }
 
 .success-icon {
-    font-size: 4rem; /* Large tick icon */
-    color: #4caf50; /* Green color for success */
+    font-size: 4rem; 
+    color: #4caf50; 
     margin-bottom: 1rem;
 }
 
@@ -32,5 +32,5 @@
 }
 
 .transaction-info strong {
-    color: #4caf50; /* Green color for labels */
+    color: #4caf50; 
 }

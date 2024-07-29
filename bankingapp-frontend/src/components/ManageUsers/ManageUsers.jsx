@@ -69,9 +69,7 @@ const ManageUsers = () => {
         },
       })
       .then(() => {
-        setAccounts(
-          accounts.filter((account) => account.id !== id)
-        );
+        setAccounts(accounts.filter((account) => account.id !== id));
         handleClose();
       })
       .catch((err) => {
@@ -104,7 +102,11 @@ const ManageUsers = () => {
 
   return (
     <Layout>
-      <Container component="main" maxWidth="lg" className="manage-users-container">
+      <Container
+        component="main"
+        maxWidth="lg"
+        className="manage-users-container"
+      >
         <Paper elevation={5} className="manage-users-paper">
           <Typography variant="h4" gutterBottom className="manage-users-title">
             Manage Users
@@ -128,34 +130,39 @@ const ManageUsers = () => {
                     <TableCell sx={{ color: "white" }}>Email</TableCell>
                     <TableCell sx={{ color: "white" }}>Address</TableCell>
                     <TableCell sx={{ color: "white" }}>Balance</TableCell>
-                    <TableCell sx={{ color: "white" }}>Account Number</TableCell>
+                    <TableCell sx={{ color: "white" }}>
+                      Account Number
+                    </TableCell>
                     <TableCell sx={{ color: "white" }}>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {accounts.slice(1).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((account) => (
-                    <TableRow key={account.id}>
-                      <TableCell>{account.username}</TableCell>
-                      <TableCell>{account.email}</TableCell>
-                      <TableCell>{account.address}</TableCell>
-                      <TableCell>{account.balance}</TableCell>
-                      <TableCell>{account.accountNumber}</TableCell>
-                      <TableCell>
-                        <IconButton
-                          onClick={() => handleEdit(account.id)}
-                          sx={{ color: "#2e8b57" }}
-                        >
-                          <Edit />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => handleClickOpen(account.id)}
-                          sx={{ color: "#3cb371" }}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {accounts
+                    .slice(1)
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((account) => (
+                      <TableRow key={account.id}>
+                        <TableCell>{account.username}</TableCell>
+                        <TableCell>{account.email}</TableCell>
+                        <TableCell>{account.address}</TableCell>
+                        <TableCell>{account.balance}</TableCell>
+                        <TableCell>{account.accountNumber}</TableCell>
+                        <TableCell>
+                          <IconButton
+                            onClick={() => handleEdit(account.id)}
+                            sx={{ color: "#2e8b57" }}
+                          >
+                            <Edit />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => handleClickOpen(account.id)}
+                            sx={{ color: "#3cb371" }}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
                 <TableFooter>
                   <TableRow>

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Layout from "../Layout/Layout";
 import { Container, Paper, Typography, Button, Box, Grid } from "@mui/material";
-import "./AccountHolderDashboard.css"; // Ensure this file is created
+import "./AccountHolderDashboard.css"; 
 
 const AccountHolderDashboard = () => {
   const navigate = useNavigate();

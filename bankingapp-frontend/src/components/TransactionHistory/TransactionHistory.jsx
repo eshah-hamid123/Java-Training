@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Container,
   Paper,
@@ -13,42 +13,50 @@ import {
   TableFooter,
   TablePagination,
   IconButton,
-} from '@mui/material';
-import { ArrowDownward, ArrowUpward } from '@mui/icons-material';
-import './TransactionHistory.css';
-import Layout from '../Layout/Layout';
+} from "@mui/material";
+import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
+import "./TransactionHistory.css";
+import Layout from "../Layout/Layout";
 
 const TransactionHistory = () => {
   const [transactions, setTransactions] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
 
-        const debitResponse = await axios.get('http://localhost:8080/v1/transactions/get-debit-transactions', {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const debitResponse = await axios.get(
+          "http://localhost:8080/v1/transactions/get-debit-transactions",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
+        );
 
-        const creditResponse = await axios.get('http://localhost:8080/v1/transactions/get-credit-transactions', {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const creditResponse = await axios.get(
+          "http://localhost:8080/v1/transactions/get-credit-transactions",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
+        );
 
         const allTransactions = [
-          ...debitResponse.data.map(txn => ({ ...txn, type: 'debit' })),
-          ...creditResponse.data.map(txn => ({ ...txn, type: 'credit' }))
+          ...debitResponse.data.map((txn) => ({ ...txn, type: "debit" })),
+          ...creditResponse.data.map((txn) => ({ ...txn, type: "credit" })),
         ];
 
         setTransactions(allTransactions);
       } catch (error) {
-        setErrorMessage('Error fetching transaction history. Please try again.');
+        setErrorMessage(
+          "Error fetching transaction history. Please try again."
+        );
       }
     };
 
@@ -66,12 +74,22 @@ const TransactionHistory = () => {
 
   return (
     <Layout>
-      <Container component="main" maxWidth="lg" className="transaction-history-container">
+      <Container
+        component="main"
+        maxWidth="lg"
+        className="transaction-history-container"
+      >
         <Paper elevation={6} className="transaction-history-paper">
-          <Typography variant="h4" gutterBottom className="transaction-history-title">
+          <Typography
+            variant="h4"
+            gutterBottom
+            className="transaction-history-title"
+          >
             Transaction History
           </Typography>
-          {errorMessage && <Typography color="error">{errorMessage}</Typography>}
+          {errorMessage && (
+            <Typography color="error">{errorMessage}</Typography>
+          )}
 
           {transactions.length === 0 ? (
             <Typography>No transactions done</Typography>
@@ -88,23 +106,33 @@ const TransactionHistory = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {transactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((transaction) => (
-                    <TableRow key={transaction.id}>
-                      <TableCell>
-                        {transaction.type === 'debit' ? (
-                          <IconButton><ArrowDownward color="error" /></IconButton>
-                        ) : (
-                          <IconButton><ArrowUpward color="success" /></IconButton>
-                        )}
-                      </TableCell>
-                      <TableCell>{new Date(transaction.date).toLocaleString()}</TableCell>
-                      <TableCell>{transaction.description}</TableCell>
-                      <TableCell>${transaction.amount}</TableCell>
-                      <TableCell>
-                        {transaction.type === 'debit' ? transaction.receiverUsername : transaction.senderUsername}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {transactions
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((transaction) => (
+                      <TableRow key={transaction.id}>
+                        <TableCell>
+                          {transaction.type === "debit" ? (
+                            <IconButton>
+                              <ArrowDownward color="error" />
+                            </IconButton>
+                          ) : (
+                            <IconButton>
+                              <ArrowUpward color="success" />
+                            </IconButton>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {new Date(transaction.date).toLocaleString()}
+                        </TableCell>
+                        <TableCell>{transaction.description}</TableCell>
+                        <TableCell>${transaction.amount}</TableCell>
+                        <TableCell>
+                          {transaction.type === "debit"
+                            ? transaction.receiverUsername
+                            : transaction.senderUsername}
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
                 <TableFooter>
                   <TableRow>

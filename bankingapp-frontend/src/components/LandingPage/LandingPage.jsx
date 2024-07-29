@@ -1,12 +1,9 @@
-// src/pages/LandingPage.js
 import React from "react";
 import { Typography, Container, Paper } from "@mui/material";
-import Layout from "../Layout/Layout"; 
-import "./LandingPage.css"; 
+import Layout from "../Layout/Layout";
+import "./LandingPage.css";
 
 const LandingPage = () => {
-  
-
   return (
     <Layout>
       <div className="landing-page">

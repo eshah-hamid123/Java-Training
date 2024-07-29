@@ -12,14 +12,14 @@ import {
 } from "@mui/material";
 import Layout from "../Layout/Layout";
 import "./Login.css";
-import { useAuth } from "../../hooks/AuthContext"; // Adjust the import path as needed
+import { useAuth } from "../../hooks/AuthContext";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const { setAuthState } = useAuth(); // Get setAuthState from useAuth
+  const { setAuthState } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();

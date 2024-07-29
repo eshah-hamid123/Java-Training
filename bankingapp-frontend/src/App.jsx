@@ -19,7 +19,7 @@ import SendMoney from "./components/SendMoney/SendMoney";
 import LandingPage from "./components/LandingPage/LandingPage";
 import Unauthorized from "./components/Unauthorized/Unauthorized";
 import { useAuth } from "./hooks/AuthContext";
-import ProtectedRoute from "./components/ProtectedRoute"; // Adjust the import path as needed
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const { authState, setAuthState } = useAuth();

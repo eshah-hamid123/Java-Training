@@ -1,7 +1,6 @@
-// src/components/Footer.js
 import React from "react";
 import { Container, Typography } from "@mui/material";
-import "./Footer.css"; // Import custom CSS
+import "./Footer.css";
 
 const Footer = () => {
   return (

@@ -1,4 +1,4 @@
-package com.assignment.BankingApp.user;
+package com.assignment.BankingApp.Auth;
 import com.assignment.BankingApp.account.Account;
 import com.assignment.BankingApp.account.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
