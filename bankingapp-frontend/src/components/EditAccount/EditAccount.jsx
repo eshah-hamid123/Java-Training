@@ -25,7 +25,11 @@ const EditAccount = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [passwordError, setPasswordError] = useState("");
+  const [isPasswordModified, setIsPasswordModified] = useState(false);
   const navigate = useNavigate();
+
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -52,10 +56,26 @@ const EditAccount = () => {
       ...account,
       [name]: value,
     });
+
+    if (name === "password") {
+      setIsPasswordModified(true);
+      if (!passwordRegex.test(value) && value !== "") {
+        setPasswordError(
+          "Password must be at least 6 characters long, include an uppercase letter, a number, and a special character."
+        );
+      } else {
+        setPasswordError("");
+      }
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (isPasswordModified && passwordError) {
+      return; 
+    }
+
     const token = localStorage.getItem("token");
     axios
       .put(
@@ -71,7 +91,7 @@ const EditAccount = () => {
         navigate("/manage-users");
       })
       .catch((err) => {
-        setError("Failed to update account" + err);
+        setError("Failed to update account");
       });
   };
 
@@ -132,6 +152,8 @@ const EditAccount = () => {
               fullWidth
               margin="normal"
               variant="outlined"
+              helperText={passwordError}
+              error={!!passwordError}
             />
             <TextField
               label="Email"

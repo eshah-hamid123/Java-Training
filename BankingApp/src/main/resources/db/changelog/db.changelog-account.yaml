@@ -12,6 +12,8 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     nullable: false
+                    primaryKey: true
+                    primaryKeyName: accounts_pk
               - column:
                   name: username
                   type: varchar(50)
@@ -30,19 +32,11 @@ databaseChangeLog:
               - column:
                   name: balance
                   type: bigint
-                  constraints:
-#                    nullable: false
               - column:
                   name: account_number
                   type: varchar(50)
-                  constraints:
-#                    nullable: false
 
 
-        - addPrimaryKey:
-            tableName: accounts
-            columnNames: account_id
-            constraintName: accounts_pk
         - addUniqueConstraint:
             tableName: accounts
             columnNames: account_number
@@ -55,6 +49,7 @@ databaseChangeLog:
             tableName: accounts
             columnNames: email
             constraintName: accounts_uk_email
+
   - changeSet:
       id: data-admin
       author: bank team
@@ -67,7 +62,7 @@ databaseChangeLog:
                   value: admin
               - column:
                   name: password
-                  value: '$2a$12$A9byoiLydRLWP432qWk6F.HHWi/p.QKHzyyqlxyPP84INdMLnWreS'
+                  value: '$2a$12$gYnsEf6Zj17uftFeRgPk.u/Fvz9BBdDUnnLUdEqnx/9MSBNygQY6G'
               - column:
                   name: role
                   value: admin

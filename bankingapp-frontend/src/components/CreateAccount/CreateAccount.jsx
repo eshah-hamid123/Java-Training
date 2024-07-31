@@ -23,6 +23,11 @@ const CreateAccount = () => {
     accountNumber: "",
   });
   const [error, setError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [accountNumberError, setAccountNumberError] = useState("");
+
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+  const accountNumberLength = 8;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,11 +35,34 @@ const CreateAccount = () => {
       ...formData,
       [name]: value,
     });
+
+    if (name === "password") {
+      if (!passwordRegex.test(value)) {
+        setPasswordError(
+          "Password must be at least 6 characters long, include an uppercase letter, a number, and a special character."
+        );
+      } else {
+        setPasswordError("");
+      }
+    }
+
+    if (name === "accountNumber") {
+      if (value.length !== accountNumberLength) {
+        setAccountNumberError(`Account number must be exactly ${accountNumberLength} characters long.`);
+      } else {
+        setAccountNumberError("");
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    if (passwordError || accountNumberError) {
+      return; 
+    }
+
     try {
       const token = localStorage.getItem("token");
       await axios.post(
@@ -104,6 +132,8 @@ const CreateAccount = () => {
               margin="normal"
               variant="outlined"
               inputProps={{ minLength: 6 }}
+              helperText={passwordError}
+              error={!!passwordError}
             />
             <TextField
               label="Email"
@@ -145,7 +175,9 @@ const CreateAccount = () => {
               required
               margin="normal"
               variant="outlined"
-              inputProps={{ minLength: 8 }}
+              inputProps={{ maxLength: accountNumberLength }}
+              helperText={accountNumberError}
+              error={!!accountNumberError}
             />
             <Button
               type="submit"

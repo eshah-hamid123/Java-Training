@@ -106,6 +106,7 @@ const Login = () => {
                     type="submit"
                     fullWidth
                     variant="contained"
+                    id="submit-btn"
                     className="login-button"
                   >
                     Login

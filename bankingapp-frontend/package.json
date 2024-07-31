@@ -1,9 +1,10 @@
 {
   "name": "bankingapp-frontend",
+  
   "proxy": "http://localhost:8080",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -25,10 +26,12 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "codeceptjs": "^3.6.4",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.3",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "puppeteer": "^22.14.0",
     "vite": "^5.3.4"
   }
 }

@@ -12,6 +12,8 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     nullable: false
+                    primaryKey: true
+                    primaryKeyName: transactions_pk
               - column:
                   name: date
                   type: date
@@ -27,7 +29,6 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
-
               - column:
                   name: sender_account_id
                   type: bigint
@@ -38,11 +39,6 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
-
-        - addPrimaryKey:
-            tableName: transactions
-            columnNames: transaction_id
-            constraintName: transactions_pk
 
         - addForeignKeyConstraint:
             baseTableName: transactions
