@@ -219,5 +219,92 @@ class BankingAppApplicationTests {
 				.andExpect(status().isUnauthorized());
 	}
 
+	@Test
+	public void testCreateAccountFailure_MissingFields() throws Exception {
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/login")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"username\":\"admin\",\"password\":\"Admin123*\"}"))
+				.andExpect(status().isOk())
+				.andReturn();
+
+		String responseBody = result.getResponse().getContentAsString();
+		String authToken = JsonPath.read(responseBody, "$.jwtToken");
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/v1/accounts/create-account")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"username\":\"\",\"password\":\"\",\"email\":\"\",\"address\":\"\",\"balance\":null,\"accountNumber\":\"\"}")
+						.with(csrf())
+						.header("Authorization", "Bearer " + authToken))
+				.andExpect(status().isInternalServerError());
+	}
+
+	@Test
+	public void testUpdateAccountFailure_NotFound() throws Exception {
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/login")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"username\":\"admin\",\"password\":\"Admin123*\"}"))
+				.andExpect(status().isOk())
+				.andReturn();
+
+		String responseBody = result.getResponse().getContentAsString();
+		String authToken = JsonPath.read(responseBody, "$.jwtToken");
+
+		mockMvc.perform(MockMvcRequestBuilders.put("/v1/accounts/edit-account/999")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"username\":\"testUser323\",\"password\":\"123456\",\"email\":\"saniaaa@example.com\",\"address\":\"lhr pak\",\"balance\":1000,\"accountNumber\":\"12567544\"}")
+						.with(csrf())
+						.header("Authorization", "Bearer " + authToken))
+				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	public void testGetAccountByIdFailure_NotFound() throws Exception {
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/login")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"username\":\"admin\",\"password\":\"Admin123*\"}"))
+				.andExpect(status().isOk())
+				.andReturn();
+
+		String responseBody = result.getResponse().getContentAsString();
+		String authToken = JsonPath.read(responseBody, "$.jwtToken");
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/v1/accounts/get-account/999")
+						.with(csrf())
+						.header("Authorization", "Bearer " + authToken))
+				.andExpect(status().isNotFound());
+	}
+
+	@Test
+	public void testDeleteAccountFailure_Unauthorized() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.delete("/v1/accounts/delete-account/2")
+						.with(csrf()))
+				.andExpect(status().isUnauthorized());
+	}
+
+	@Order(8)
+	@Test
+	public void testCreateTransactionFailure_InsufficientBalance() throws Exception {
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/login")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"username\":\"test2\",\"password\":\"Test123*\"}"))
+				.andExpect(status().isOk())
+				.andReturn();
+
+		String responseBody = result.getResponse().getContentAsString();
+		String authToken = JsonPath.read(responseBody, "$.jwtToken");
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/v1/transactions/transfer-money")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"recieverAccountNumber\":\"12345678\",\"amount\":100000, \"description\":\"testing\"}")
+						.with(csrf())
+						.header("Authorization", "Bearer " + authToken))
+				.andExpect(status().isBadRequest());
+	}
+
+
+
+
+
+
 
 }
