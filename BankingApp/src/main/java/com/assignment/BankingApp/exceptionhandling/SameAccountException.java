@@ -5,3 +5,4 @@ public class SameAccountException extends RuntimeException {
         super(message);
     }
 }
+

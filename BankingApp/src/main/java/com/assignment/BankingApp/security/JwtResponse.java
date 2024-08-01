@@ -1,11 +1,13 @@
 package com.assignment.BankingApp.security;
 
-
 import com.assignment.BankingApp.account.Account;
-import lombok.*;
+import lombok.Getter;
+import lombok.Builder;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

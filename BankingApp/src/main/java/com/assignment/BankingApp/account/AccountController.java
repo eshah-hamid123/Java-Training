@@ -1,4 +1,5 @@
 package com.assignment.BankingApp.account;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -6,13 +7,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/accounts")
 public class AccountController {
+
     private final AccountService accountService;
 
     @Autowired
@@ -27,12 +38,10 @@ public class AccountController {
             Account newAccount = accountService.createAccount(account);
             return new ResponseEntity<>(newAccount, HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
-
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>("Error creating account", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -50,7 +59,6 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied.");
         }
     }
-
 
     @PreAuthorize("hasAnyAuthority('admin')")
     @PutMapping("/edit-account/{accountId}")
@@ -72,9 +80,8 @@ public class AccountController {
     @PreAuthorize("hasAnyAuthority('admin')")
     @GetMapping("/all-accounts")
     public ResponseEntity<List<Account>> getAllAccounts(@RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                                @RequestParam(name = "size", defaultValue = "1000") Integer size) {
+                                                        @RequestParam(name = "size", defaultValue = "1000") Integer size) {
         List<Account> accounts = accountService.findAll(page, size);
         return ResponseEntity.ok(accounts);
     }
-
 }

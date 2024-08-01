@@ -22,7 +22,8 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private Logger logger = LoggerFactory.getLogger(OncePerRequestFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OncePerRequestFilter.class);
+    private static final int BEARER_TOKEN_START_INDEX = 7;
 
     @Autowired
     private JwtHelper jwtHelper;
@@ -34,30 +35,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestHeader = request.getHeader("Authorization");
 
-        logger.info("Header :  {}", requestHeader);
+        LOGGER.info("Header :  {}", requestHeader);
 
         String username = null;
         String token = null;
 
         if (requestHeader != null && requestHeader.startsWith("Bearer ")) {
-            token = requestHeader.substring(7);
+            token = requestHeader.substring(BEARER_TOKEN_START_INDEX);
             try {
                 username = this.jwtHelper.getUsernameFromToken(token);
             } catch (IllegalArgumentException e) {
-                logger.info("Illegal Argument while fetching the username !!");
+                LOGGER.info("Illegal Argument while fetching the username !!");
                 e.printStackTrace();
             } catch (ExpiredJwtException e) {
-                logger.info("Given jwt token is expired !!");
+                LOGGER.info("Given jwt token is expired !!");
                 e.printStackTrace();
             } catch (MalformedJwtException e) {
-                logger.info("Some change has been made to the token !! Invalid Token");
+                LOGGER.info("Some change has been made to the token !! Invalid Token");
                 e.printStackTrace();
             } catch (Exception e) {
-                logger.info("An error occurred while processing the JWT token");
+                LOGGER.info("An error occurred while processing the JWT token");
                 e.printStackTrace();
             }
         } else {
-            logger.info("Invalid Header Value !!");
+            LOGGER.info("Invalid Header Value !!");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -69,14 +70,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
-                logger.info("Validation fails !!");
+                LOGGER.info("Validation fails !!");
             }
         }
 
         try {
             filterChain.doFilter(request, response);
-        } catch(Exception e) {
-            logger.info(e.getMessage());
+        } catch (Exception e) {
+            LOGGER.info(e.getMessage());
         }
 
     }

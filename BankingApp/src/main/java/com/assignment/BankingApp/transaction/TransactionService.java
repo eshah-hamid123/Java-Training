@@ -22,18 +22,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiSecurityConfiguration.class);
+    private static final int MAX_PAGE_SIZE = 1000;
+
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
 
-
-    private static final Logger logger = LoggerFactory.getLogger(ApiSecurityConfiguration.class);
     @Autowired
     public TransactionService(TransactionRepository transactionRepository,
-                              AccountRepository accountRepository
-                              ) {
+                              AccountRepository accountRepository) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
-
     }
 
     @Transactional
@@ -50,7 +49,7 @@ public class TransactionService {
 
         updateAccountBalances(senderAccount, receiverAccount, newTransaction.getAmount());
 
-        Transaction savedTransaction =  saveTransaction(newTransaction, senderAccount, receiverAccount);
+        Transaction savedTransaction = saveTransaction(newTransaction, senderAccount, receiverAccount);
         return new TransactionHistoryDTO(
                 savedTransaction.getId(),
                 savedTransaction.getDescription(),
@@ -58,7 +57,6 @@ public class TransactionService {
                 savedTransaction.getDate(),
                 senderAccount.getUsername(),
                 receiverAccount.getUsername()
-
         );
     }
 
@@ -66,10 +64,10 @@ public class TransactionService {
         if (page < 0) {
             page = 0;
         }
-        if (size > 1000) {
-            size = 1000;
+        if (size > MAX_PAGE_SIZE) {
+            size = MAX_PAGE_SIZE;
         }
-        List<Transaction> transactions =  transactionRepository.findAll(PageRequest.of(page, size)).getContent();
+        List<Transaction> transactions = transactionRepository.findAll(PageRequest.of(page, size)).getContent();
         return transactions.stream().map(transaction -> {
             String senderUsername = accountRepository.findById(transaction.getSenderAccountId())
                     .map(Account::getUsername)
@@ -94,8 +92,7 @@ public class TransactionService {
 
     public List<TransactionHistoryDTO> getDebitTransactions() {
         Account account = getCurrentLoggedInUser();
-
-        List<Transaction> transactions =  transactionRepository.findBySenderAccountId(account.getId());
+        List<Transaction> transactions = transactionRepository.findBySenderAccountId(account.getId());
         return transactions.stream().map(transaction -> {
             String receiverUsername = accountRepository.findById(transaction.getReceiverAccountId())
                     .map(Account::getUsername)
@@ -113,7 +110,7 @@ public class TransactionService {
 
     public List<TransactionHistoryDTO> getCreditTransactions() {
         Account account = getCurrentLoggedInUser();
-        List<Transaction> transactions =  transactionRepository.findByReceiverAccountId(account.getId());
+        List<Transaction> transactions = transactionRepository.findByReceiverAccountId(account.getId());
         return transactions.stream().map(transaction -> {
             String senderUsername = accountRepository.findById(transaction.getSenderAccountId())
                     .map(Account::getUsername)
@@ -127,7 +124,6 @@ public class TransactionService {
                     null
             );
         }).collect(Collectors.toList());
-
     }
 
     private Account getCurrentLoggedInUser() {
@@ -159,5 +155,4 @@ public class TransactionService {
         transaction.setReceiverAccountId(receiverAccount.getId());
         return transactionRepository.save(transaction);
     }
-
 }

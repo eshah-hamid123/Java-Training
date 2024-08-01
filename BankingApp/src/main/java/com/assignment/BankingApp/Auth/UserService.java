@@ -15,8 +15,7 @@ public class UserService implements UserDetailsService {
     private final AccountRepository accountRepository;
 
     @Autowired
-    public UserService( AccountRepository accountRepository) {
-
+    public UserService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 

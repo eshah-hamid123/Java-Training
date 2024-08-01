@@ -1,4 +1,5 @@
 package com.assignment.BankingApp.account;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,6 +16,9 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private static final int ACCOUNT_NUMBER_LENGTH = 8;
+    private static final int MAX_PAGE_SIZE = 1000;
 
     public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
@@ -37,10 +41,9 @@ public class AccountService {
         }
 
         // Check if account number is exactly 8 digits long
-        if (account.getAccountNumber().length() != 8) {
-            throw new IllegalArgumentException("Account number must be exactly 8 digits long");
+        if (account.getAccountNumber().length() != ACCOUNT_NUMBER_LENGTH) {
+            throw new IllegalArgumentException("Account number must be exactly " + ACCOUNT_NUMBER_LENGTH + " digits long");
         }
-
 
         account.setRole("account-holder");
         account.setPassword(passwordEncoder.encode(account.getPassword()));
@@ -61,7 +64,6 @@ public class AccountService {
         Optional<Account> existingAccount = accountRepository.findById(accountId);
 
         if (existingAccount.isPresent()) {
-
             Account accountToUpdate = existingAccount.get();
             accountToUpdate.setUsername(updatedAccount.getUsername());
             accountToUpdate.setPassword(updatedAccount.getPassword());
@@ -82,8 +84,8 @@ public class AccountService {
         if (page < 0) {
             page = 0;
         }
-        if (size > 1000) {
-            size = 1000;
+        if (size > MAX_PAGE_SIZE) {
+            size = MAX_PAGE_SIZE;
         }
         return accountRepository.findAll(PageRequest.of(page, size)).getContent();
     }

@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,14 +32,14 @@ public class ApiSecurityConfiguration {
     private JwtAuthenticationEntryEndpoint point;
     @Autowired
     private JwtAuthenticationFilter filter;
-    private static final Logger logger = LoggerFactory.getLogger(ApiSecurityConfiguration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiSecurityConfiguration.class);
 
     @Value("${api.security.ignored}")
     private String[] ignored;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        logger.info("Ignored paths: {}", (Object) ignored); // Log the ignored paths
+        LOGGER.info("Ignored paths: {}", (Object) ignored); // Log the ignored paths
         return web -> {
             for (String location : ignored) {
                 web.ignoring().requestMatchers(new AntPathRequestMatcher(location));
@@ -50,7 +51,7 @@ public class ApiSecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.formLogin(Customizer.withDefaults())
                 .authorizeHttpRequests(config -> config.anyRequest().authenticated())
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(point)
@@ -85,5 +86,4 @@ public class ApiSecurityConfiguration {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
         return builder.getAuthenticationManager();
     }
-
 }

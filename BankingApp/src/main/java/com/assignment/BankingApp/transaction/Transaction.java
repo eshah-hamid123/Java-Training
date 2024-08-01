@@ -1,6 +1,12 @@
 package com.assignment.BankingApp.transaction;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +25,7 @@ public class Transaction {
     private Date date;
     private String description;
     private Long amount;
-    //private String dbCrIndicator;
     private Long senderAccountId;
     private Long receiverAccountId;
 }
+
