@@ -95,6 +95,7 @@ const SendMoney = () => {
                   onChange={handleChange}
                   required
                   margin="normal"
+                  inputProps={{ step: "any", min: "50" }}
                 />
                 <TextField
                   fullWidth

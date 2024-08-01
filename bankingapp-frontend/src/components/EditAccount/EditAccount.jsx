@@ -26,7 +26,9 @@ const EditAccount = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [passwordError, setPasswordError] = useState("");
+  const [balanceError, setBalanceError] = useState("");
   const [isPasswordModified, setIsPasswordModified] = useState(false);
+  const [isBalanceModified, setIsBalanceModified] = useState(false);
   const navigate = useNavigate();
 
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
@@ -67,12 +69,22 @@ const EditAccount = () => {
         setPasswordError("");
       }
     }
+
+    if (name === "balance") {
+      setIsBalanceModified(true);
+      const numericValue = parseFloat(value);
+      if (numericValue <= 0 && value !== "") {
+        setBalanceError("Balance must be greater than 0.");
+      } else {
+        setBalanceError("");
+      }
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (isPasswordModified && passwordError) {
+    if ((isPasswordModified && passwordError) || (isBalanceModified && balanceError)) {
       return; 
     }
 
@@ -184,6 +196,8 @@ const EditAccount = () => {
               fullWidth
               margin="normal"
               variant="outlined"
+              helperText={balanceError}
+              error={!!balanceError}
             />
             <Button
               type="submit"

@@ -25,9 +25,12 @@ const CreateAccount = () => {
   const [error, setError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [accountNumberError, setAccountNumberError] = useState("");
+  const [balanceError, setBalanceError] = useState("");
 
-  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+  const passwordRegex =
+    /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
   const accountNumberLength = 8;
+  const accountNumberRegex = /^\d+$/; // Regex to allow only digits
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,10 +50,22 @@ const CreateAccount = () => {
     }
 
     if (name === "accountNumber") {
-      if (value.length !== accountNumberLength) {
-        setAccountNumberError(`Account number must be exactly ${accountNumberLength} characters long.`);
+      if (!accountNumberRegex.test(value)) {
+        setAccountNumberError("Account number must contain only numbers.");
+      } else if (value.length !== accountNumberLength) {
+        setAccountNumberError(
+          `Account number must be exactly ${accountNumberLength} characters long.`
+        );
       } else {
         setAccountNumberError("");
+      }
+    }
+
+    if (name === "balance") {
+      if (Number(value) <= 0) {
+        setBalanceError("Balance must be greater than 0.");
+      } else {
+        setBalanceError("");
       }
     }
   };
@@ -59,8 +74,8 @@ const CreateAccount = () => {
     e.preventDefault();
     setError("");
 
-    if (passwordError || accountNumberError) {
-      return; 
+    if (passwordError || accountNumberError || balanceError) {
+      return;
     }
 
     try {
@@ -74,7 +89,7 @@ const CreateAccount = () => {
           },
         }
       );
-    
+
       setFormData({
         username: "",
         password: "",
@@ -165,6 +180,9 @@ const CreateAccount = () => {
               fullWidth
               margin="normal"
               variant="outlined"
+              helperText={balanceError}
+              error={!!balanceError}
+              inputProps={{ step: "any", min: "1" }}
             />
             <TextField
               label="Account Number"

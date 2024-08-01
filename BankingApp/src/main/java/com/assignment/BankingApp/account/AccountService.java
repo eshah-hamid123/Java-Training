@@ -32,6 +32,16 @@ public class AccountService {
             throw new DataIntegrityViolationException("Account number already exists");
         }
 
+        if (account.getBalance() <= 0) {
+            throw new IllegalArgumentException("Balance must be greater than 0");
+        }
+
+        // Check if account number is exactly 8 digits long
+        if (account.getAccountNumber().length() != 8) {
+            throw new IllegalArgumentException("Account number must be exactly 8 digits long");
+        }
+
+
         account.setRole("account-holder");
         account.setPassword(passwordEncoder.encode(account.getPassword()));
 
