@@ -27,5 +27,12 @@ public class Transaction {
     private Long amount;
     private Long senderAccountId;
     private Long receiverAccountId;
-}
 
+    public Date getDate() {
+        return date == null ? null : new Date(date.getTime());
+    }
+
+    public void setDate(Date date) {
+        this.date = date == null ? null : new Date(date.getTime());
+    }
+}
