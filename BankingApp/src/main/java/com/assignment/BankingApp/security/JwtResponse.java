@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -18,5 +18,24 @@ public class JwtResponse {
 
     public Account getAccount() {
         return account == null ? null : new Account(account);
+    }
+
+    public static class JwtResponseBuilder {
+        private String jwtToken;
+        private Account account;
+
+        public JwtResponseBuilder jwtToken(String jwtToken) {
+            this.jwtToken = jwtToken;
+            return this;
+        }
+
+        public JwtResponseBuilder account(Account account) {
+            this.account = account == null ? null : new Account(account);
+            return this;
+        }
+
+        public JwtResponse build() {
+            return new JwtResponse(jwtToken, account);
+        }
     }
 }

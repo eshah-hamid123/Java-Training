@@ -46,11 +46,13 @@ public class AuthController {
             this.doAuthenticate(login.getUsername(), login.getPassword());
             UserDetails userDetails = userDetailsService.loadUserByUsername(login.getUsername());
             String token = this.helper.generateToken(userDetails);
+
             Account account = null;
             Optional<Account> optionalAccount = accountRepository.findByUsername(login.getUsername());
             if (optionalAccount.isPresent()) {
-                account = optionalAccount.get();
+                account = new Account(optionalAccount.get()); // Using the copy constructor
             }
+
             JwtResponse response = JwtResponse.builder()
                     .jwtToken(token)
                     .account(account)
@@ -60,6 +62,7 @@ public class AuthController {
             return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
         }
     }
+
 
     private void doAuthenticate(String username, String password) {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, password);
