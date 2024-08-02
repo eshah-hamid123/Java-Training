@@ -41,6 +41,20 @@ public class Account {
     @Size(min = MIN_ACCOUNT_NUMBER_LENGTH, message = "Account number must be at least " + MIN_ACCOUNT_NUMBER_LENGTH + " characters")
     private String accountNumber;
 
+    public Account(Account account) {
+        this.id = account.id;
+        this.username = account.username;
+        this.password = account.password;
+        this.role = account.role;
+        this.email = account.email;
+        this.address = account.address;
+        this.balance = account.balance;
+        this.accountNumber = account.accountNumber;
+    }
+
+    // Default constructor
+    public Account() { }
+
 
 
 

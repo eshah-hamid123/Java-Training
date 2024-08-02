@@ -15,4 +15,8 @@ import lombok.ToString;
 public class JwtResponse {
     private String jwtToken;
     private Account account;
+
+    public Account getAccount() {
+        return account == null ? null : new Account(account);
+    }
 }
