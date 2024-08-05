@@ -1,6 +1,8 @@
 package com.assignment.BankingApp.account;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
@@ -47,6 +50,7 @@ public class AccountService {
 
         account.setRole("account-holder");
         account.setPassword(passwordEncoder.encode(account.getPassword()));
+        account.setIsActive(true);
 
         return accountRepository.save(account);
     }
@@ -80,6 +84,18 @@ public class AccountService {
         accountRepository.deleteById(accountId);
     }
 
+    public void deactivateAccount(Long accountId) {
+        Optional<Account> accountOptional = accountRepository.findById(accountId);
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            account.setIsActive(false);
+            account.setBalance(0L);
+            accountRepository.save(account);
+        } else {
+            throw new EntityNotFoundException("Account with id " + accountId + " not found");
+        }
+    }
+
     public List<Account> findAll(Integer page, Integer size) {
         if (page < 0) {
             page = 0;
@@ -87,8 +103,12 @@ public class AccountService {
         if (size > MAX_PAGE_SIZE) {
             size = MAX_PAGE_SIZE;
         }
-        return accountRepository.findAll(PageRequest.of(page, size)).getContent();
+        Page<Account> accountPage = accountRepository.findAll(PageRequest.of(page, size));
+        return accountPage.stream()
+                .filter(Account::getIsActive)
+                .collect(Collectors.toList());
     }
+
 
     private Account getCurrentLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

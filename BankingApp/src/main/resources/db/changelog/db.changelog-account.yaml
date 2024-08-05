@@ -35,6 +35,12 @@ databaseChangeLog:
               - column:
                   name: account_number
                   type: varchar(50)
+              - column:
+                  name: is_active
+                  type: boolean
+                  constraints:
+                    nullable: false
+                    defaultValueBoolean: true
 
 
         - addUniqueConstraint:
@@ -72,4 +78,7 @@ databaseChangeLog:
               - column:
                   name: address
                   value: Lahore, Pakistan
+              - column:
+                  name: is_active
+                  valueBoolean: true
 

@@ -73,10 +73,15 @@ public class AccountController {
 
     @PreAuthorize("hasAnyAuthority('admin')")
     @DeleteMapping("/delete-account/{accountId}")
-    public ResponseEntity<?> deleteAccount(@PathVariable Long accountId) {
-        accountService.deleteAccount(accountId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deactivateAccount(@PathVariable Long accountId) {
+        try {
+            accountService.deactivateAccount(accountId);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
+
 
     @PreAuthorize("hasAnyAuthority('admin')")
     @GetMapping("/all-accounts")

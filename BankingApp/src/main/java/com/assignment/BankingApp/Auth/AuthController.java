@@ -43,15 +43,21 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Login login) {
         try {
+            Account account = null;
+            Optional<Account> optionalAccount = accountRepository.findByUsername(login.getUsername());
+            if (optionalAccount.isPresent()) {
+                account = new Account(optionalAccount.get());
+                if (!account.getIsActive()) {
+                    return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
+                }
+            }
+
+
+
             this.doAuthenticate(login.getUsername(), login.getPassword());
             UserDetails userDetails = userDetailsService.loadUserByUsername(login.getUsername());
             String token = this.helper.generateToken(userDetails);
 
-            Account account = null;
-            Optional<Account> optionalAccount = accountRepository.findByUsername(login.getUsername());
-            if (optionalAccount.isPresent()) {
-                account = new Account(optionalAccount.get()); // Using the copy constructor
-            }
 
             JwtResponse response = JwtResponse.builder()
                     .jwtToken(token)
