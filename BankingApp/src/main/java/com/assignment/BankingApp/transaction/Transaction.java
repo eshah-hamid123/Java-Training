@@ -21,7 +21,7 @@ public class Transaction {
     @Column(name = "transaction_id")
     private Long id;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
     private String description;
     private Long amount;
