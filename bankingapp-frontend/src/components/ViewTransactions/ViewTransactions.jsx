@@ -35,7 +35,10 @@ const ViewTransactions = () => {
             },
           }
         );
-        setTransactions(response.data);
+
+        // Reverse the transactions array
+        const reversedTransactions = response.data.reverse();
+        setTransactions(reversedTransactions);
       } catch (error) {
         setErrorMessage(
           "Error fetching transaction history. Please try again."
