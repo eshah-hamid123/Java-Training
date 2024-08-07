@@ -28,7 +28,9 @@ public class AuthController {
             JwtResponse response = authService.login(login.getUsername(), login.getPassword());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 

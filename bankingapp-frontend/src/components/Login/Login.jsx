@@ -13,6 +13,8 @@ import {
 import Layout from "../Layout/Layout";
 import "./Login.css";
 import { useAuth } from "../../hooks/AuthContext";
+import bcrypt from "bcryptjs";
+import CryptoJS from "crypto-js";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -24,10 +26,17 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/v1/auth/login", {
-        username,
-        password,
-      });
+      let passwordToSend = password;
+    if (username.toLowerCase() !== "admin") {
+      // Hash the password before sending it to the backend if username is not "admin"
+      //const salt = await bcrypt.genSalt(10);
+      passwordToSend = CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
+    }
+
+    const response = await axios.post("http://localhost:8080/v1/auth/login", {
+      username,
+      password: passwordToSend,
+    });
 
       if (response.status === 200) {
         const { jwtToken, account } = response.data;
@@ -53,6 +62,7 @@ const Login = () => {
       if (error.response && error.response.status === 401) {
         setErrorMessage(error.response.data);
       } else {
+        console.log(error)
         setErrorMessage("An error occurred. Please try again.");
       }
     }

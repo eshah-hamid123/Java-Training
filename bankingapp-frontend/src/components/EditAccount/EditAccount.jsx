@@ -11,6 +11,7 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
+import CryptoJS from "crypto-js";
 import Layout from "../Layout/Layout";
 import "./EditAccount.css";
 
@@ -94,8 +95,9 @@ const EditAccount = () => {
 
     try {
       if (isPasswordModified && account.password !== "") {
-        const salt = await bcrypt.genSalt(10);
-        updatedAccount.password = await bcrypt.hash(account.password, salt);
+        //const salt = await bcrypt.genSalt(10);
+        updatedAccount.password = CryptoJS.SHA256(account.password).toString(CryptoJS.enc.Hex);
+        
       }
 
       await axios.put(
@@ -167,6 +169,7 @@ const EditAccount = () => {
               name="password"
               type="password"
               value={account.password}
+              inputProps={{ minLength: 6 }}
               onChange={handleChange}
               fullWidth
               margin="normal"

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import bcrypt from "bcryptjs";
+import CryptoJS from "crypto-js";
 import {
   Container,
   Paper,
@@ -80,9 +81,9 @@ const CreateAccount = () => {
     }
 
     try {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(formData.password, salt);
-
+      //const salt = await bcrypt.genSalt(10);
+      const hashedPassword = CryptoJS.SHA256(formData.password).toString(CryptoJS.enc.Hex);
+      
       const token = localStorage.getItem("token");
       await axios.post(
         "http://localhost:8080/v1/accounts/create-account",

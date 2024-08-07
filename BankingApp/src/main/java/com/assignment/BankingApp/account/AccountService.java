@@ -48,8 +48,8 @@ public class AccountService {
         }
 
         account.setRole("account-holder");
-        account.setPassword(account.getPassword());
-        //account.setPassword(passwordEncoder.encode(account.getPassword()));
+        //account.setPassword(account.getPassword());
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
         account.setIsActive(true);
 
         return accountRepository.save(account);
@@ -72,7 +72,7 @@ public class AccountService {
             accountToUpdate.setUsername(updatedAccount.getUsername());
             accountToUpdate.setPassword(updatedAccount.getPassword());
             accountToUpdate.setBalance(updatedAccount.getBalance());
-            //accountToUpdate.setPassword(passwordEncoder.encode(updatedAccount.getPassword()));
+            accountToUpdate.setPassword(passwordEncoder.encode(updatedAccount.getPassword()));
             accountToUpdate.setAddress(updatedAccount.getAddress());
             accountToUpdate.setEmail(updatedAccount.getEmail());
             return accountRepository.save(accountToUpdate);
