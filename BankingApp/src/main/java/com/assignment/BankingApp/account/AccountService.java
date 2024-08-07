@@ -43,13 +43,13 @@ public class AccountService {
             throw new IllegalArgumentException("Balance must be greater than 0");
         }
 
-        // Check if account number is exactly 8 digits long
         if (account.getAccountNumber().length() != ACCOUNT_NUMBER_LENGTH) {
             throw new IllegalArgumentException("Account number must be exactly " + ACCOUNT_NUMBER_LENGTH + " digits long");
         }
 
         account.setRole("account-holder");
-        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        account.setPassword(account.getPassword());
+        //account.setPassword(passwordEncoder.encode(account.getPassword()));
         account.setIsActive(true);
 
         return accountRepository.save(account);
@@ -72,16 +72,12 @@ public class AccountService {
             accountToUpdate.setUsername(updatedAccount.getUsername());
             accountToUpdate.setPassword(updatedAccount.getPassword());
             accountToUpdate.setBalance(updatedAccount.getBalance());
-            accountToUpdate.setPassword(passwordEncoder.encode(updatedAccount.getPassword()));
+            //accountToUpdate.setPassword(passwordEncoder.encode(updatedAccount.getPassword()));
             accountToUpdate.setAddress(updatedAccount.getAddress());
             accountToUpdate.setEmail(updatedAccount.getEmail());
             return accountRepository.save(accountToUpdate);
         }
         return null;
-    }
-
-    public void deleteAccount(Long accountId) {
-        accountRepository.deleteById(accountId);
     }
 
     public void deactivateAccount(Long accountId) {

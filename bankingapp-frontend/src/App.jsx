@@ -34,7 +34,7 @@ function App() {
         userRole: role,
       });
     }
-  }, [setAuthState]);
+  }, []);
 
   return (
     <Router>

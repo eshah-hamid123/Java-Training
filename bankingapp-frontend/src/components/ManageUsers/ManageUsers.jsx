@@ -37,6 +37,7 @@ const ManageUsers = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log("Hereeeeeee")
     axios
       .get("http://localhost:8080/v1/accounts/all-accounts", {
         headers: {

@@ -47,7 +47,7 @@ const TransactionHistory = () => {
           }
         );
 
-        // Combine and sort transactions
+
         const allTransactions = [
           ...debitResponse.data.map((txn) => ({ ...txn, type: "debit" })),
           ...creditResponse.data.map((txn) => ({ ...txn, type: "credit" })),

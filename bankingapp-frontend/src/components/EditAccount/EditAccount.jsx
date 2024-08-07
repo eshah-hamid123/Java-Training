@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import bcrypt from "bcryptjs";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Container,
@@ -46,7 +47,7 @@ const EditAccount = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err.response.data)
+        console.log(err.response.data);
         setError("Failed to fetch account details");
         setLoading(false);
       });
@@ -81,7 +82,7 @@ const EditAccount = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if ((isPasswordModified && passwordError) || (isBalanceModified && balanceError)) {
@@ -89,22 +90,28 @@ const EditAccount = () => {
     }
 
     const token = localStorage.getItem("token");
-    axios
-      .put(
+    const updatedAccount = { ...account };
+
+    try {
+      if (isPasswordModified && account.password !== "") {
+        const salt = await bcrypt.genSalt(10);
+        updatedAccount.password = await bcrypt.hash(account.password, salt);
+      }
+
+      await axios.put(
         `http://localhost:8080/v1/accounts/edit-account/${accountId}`,
-        account,
+        updatedAccount,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-      )
-      .then((response) => {
-        navigate("/manage-users");
-      })
-      .catch((err) => {
-        setError("Failed to update account");
-      });
+      );
+
+      navigate("/manage-users");
+    } catch (err) {
+      setError("Failed to update account");
+    }
   };
 
   if (loading)

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import bcrypt from "bcryptjs";
 import {
   Container,
   Paper,
@@ -30,7 +31,7 @@ const CreateAccount = () => {
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
   const accountNumberLength = 8;
-  const accountNumberRegex = /^\d+$/; // Regex to allow only digits
+  const accountNumberRegex = /^\d+$/;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -79,10 +80,16 @@ const CreateAccount = () => {
     }
 
     try {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(formData.password, salt);
+
       const token = localStorage.getItem("token");
       await axios.post(
         "http://localhost:8080/v1/accounts/create-account",
-        formData,
+        {
+          ...formData,
+          password: hashedPassword,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,

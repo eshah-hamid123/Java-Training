@@ -64,10 +64,10 @@ const AdminDashboard = () => {
             <Grid item xs={12} sm={6} md={4}>
               <Box className="dashboard-card-admin">
                 <Typography variant="h6" className="card-title-admin">
-                  Pending Transactions
+                  Branches Across the country
                 </Typography>
                 <Typography variant="h4" className="card-value-admin">
-                  456
+                  12
                 </Typography>
               </Box>
             </Grid>
