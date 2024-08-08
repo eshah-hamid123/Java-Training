@@ -72,6 +72,7 @@ public class ApiSecurityConfiguration {
                         .allowedOrigins("http://localhost:5173")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
+                        .exposedHeaders("Authorization")
                         .allowCredentials(true);
             }
         };

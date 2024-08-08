@@ -2,6 +2,7 @@ package com.assignment.BankingApp.Auth;
 
 import com.assignment.BankingApp.security.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,7 +27,9 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody Login login) {
         try {
             JwtResponse response = authService.login(login.getUsername(), login.getPassword());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + response.getJwtToken());
+            return new ResponseEntity<>(response.getAccount(), headers, HttpStatus.OK);
         } catch (BadCredentialsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch(Exception e) {

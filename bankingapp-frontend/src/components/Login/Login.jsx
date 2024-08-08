@@ -36,10 +36,13 @@ const Login = () => {
     const response = await axios.post("http://localhost:8080/v1/auth/login", {
       username,
       password: passwordToSend,
-    });
+    },
+    { headers: { 'Content-Type': 'application/json' } });
 
       if (response.status === 200) {
-        const { jwtToken, account } = response.data;
+        const jwtToken = response.headers['authorization']?.split(' ')[1];
+        console.log(jwtToken);
+        const  account = response.data;
         const role = account.role;
         localStorage.setItem("token", jwtToken);
         localStorage.setItem("role", role);
